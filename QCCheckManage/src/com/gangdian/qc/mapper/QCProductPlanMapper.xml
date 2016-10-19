@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gangdian.qc.dao.QCProductPlanDao" >
+  <resultMap id="QCPPResultMap" type="com.gangdian.qc.model.QCProductPlan" >
+    <result column="id" property="id" jdbcType="INTEGER" />
+    <result column="pono" property="pono" jdbcType="NVARCHAR" />
+    <result column="model" property="model" jdbcType="NVARCHAR" />
+    <result column="product_specific" property="productSpecific" jdbcType="NVARCHAR" />
+    <result column="order_number" property="orderNumber" jdbcType="INTEGER" />
+    <result column="finish_number" property="finishNumber" jdbcType="INTEGER" />
+    <result column="pre_product_date" property="preProductDate" jdbcType="NVARCHAR" />
+    <result column="pre_shipment_date" property="preShipmentDate" jdbcType="NVARCHAR" />
+    <result column="product_status" property="productStatus" jdbcType="NVARCHAR" />
+    <result column="product_id" property="productId" jdbcType="INTEGER" />
+    <result column="boxbarcode" property="boxbarcode" jdbcType="NVARCHAR" />
+    <result column="packbarcode" property="packbarcode" jdbcType="NVARCHAR" />
+    <result column="lastUpUser" property="lastUpUser" jdbcType="NVARCHAR" />
+  </resultMap>
+  <insert id="insert" parameterType="com.gangdian.qc.model.QCProductPlan" >
+    insert into qc_plan_production (id, pono, model, 
+      product_specific, order_number, finish_number, 
+      pre_product_date,pre_shipment_date, product_status,product_id,
+      boxbarcode,packbarcode)
+    values (#{id,jdbcType=INTEGER}, #{pono,jdbcType=NVARCHAR}, #{model,jdbcType=NVARCHAR}, 
+      #{productSpecific,jdbcType=NVARCHAR}, #{orderNumber,jdbcType=INTEGER}, #{finishNumber,jdbcType=INTEGER}, 
+      #{preProductDate,jdbcType=NVARCHAR},#{preShipmentDate,jdbcType=NVARCHAR}, #{productStatus,jdbcType=NVARCHAR},
+      #{productId,jdbcType=INTEGER},#{boxbarcode,jdbcType=NVARCHAR},#{packbarcode,jdbcType=NVARCHAR})
+      
+  </insert>
+  <insert id="insertSelective" parameterType="com.gangdian.qc.model.QCProductPlan" >
+    insert into qc_plan_production
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="pono != null" >
+        pono,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="productSpecific != null" >
+        product_specific,
+      </if>
+      <if test="orderNumber != null" >
+        order_number,
+      </if>
+      <if test="finishNumber != null" >
+        finish_number,
+      </if>
+      <if test="preProductDate != null" >
+        pre_product_date,
+      </if>
+      <if test="preShipmentDate != null" >
+        pre_shipment_date,
+      </if>
+      <if test="productStatus != null" >
+        product_status,
+      </if>
+      <if test="productId != null" >
+        product_id,
+      </if>
+      <if test="boxbarcode != null" >
+        boxbarcode,
+      </if>
+      <if test="packbarcode != null" >
+        packbarcode,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="pono != null" >
+        #{pono,jdbcType=NVARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=NVARCHAR},
+      </if>
+      <if test="productSpecific != null" >
+        #{productSpecific,jdbcType=NVARCHAR},
+      </if>
+      <if test="orderNumber != null" >
+        #{orderNumber,jdbcType=INTEGER},
+      </if>
+      <if test="finishNumber != null" >
+        #{finishNumber,jdbcType=INTEGER},
+      </if>
+      <if test="preProductDate != null" >
+        #{preProductDate,jdbcType=NVARCHAR},
+      </if>
+      <if test="preShipmentDate != null" >
+        #{preShipmentDate,jdbcType=NVARCHAR},
+      </if>
+      <if test="productStatus != null" >
+        #{productStatus,jdbcType=NVARCHAR},
+      </if>
+      <if test="productId != null" >
+        #{productId,jdbcType=NVARCHAR},
+      </if>
+      <if test="boxbarcode != null" >
+       #{boxbarcode,jdbcType=NVARCHAR},
+      </if>
+      <if test="packbarcode != null" >
+        #{packbarcode,jdbcType=NVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <insert id="addQCPP"  parameterType="com.gangdian.qc.model.QCProductPlan">
+       insert into qc_plan_production ( pono, model, 
+                   product_specific, order_number, finish_number, 
+                   pre_product_date,pre_shipment_date, product_status,product_id,boxbarcode,packbarcode)
+       values (#{pono,jdbcType=NVARCHAR}, #{model,jdbcType=NVARCHAR}, 
+               #{productSpecific,jdbcType=NVARCHAR}, #{orderNumber,jdbcType=INTEGER}, #{finishNumber,jdbcType=INTEGER}, 
+               #{preProductDate,jdbcType=NVARCHAR},#{preShipmentDate,jdbcType=NVARCHAR}, #{productStatus,jdbcType=NVARCHAR},
+               #{productId,jdbcType=NVARCHAR},#{boxbarcode,jdbcType=NVARCHAR},#{packbarcode,jdbcType=NVARCHAR})
+  </insert>
+  <delete id="deleteQCPP" >
+       delete from qc_plan_production where id=#{id,jdbcType=INTEGER}
+  </delete>
+  <update id="updateQCPP" parameterType="com.gangdian.qc.model.QCProductPlan">
+       update qc_plan_production set pono=#{pono,jdbcType=NVARCHAR},model=#{model,jdbcType=NVARCHAR},
+               product_specific=#{productSpecific,jdbcType=NVARCHAR},order_number=#{orderNumber,jdbcType=INTEGER},
+               pre_shipment_date=#{preShipmentDate,jdbcType=NVARCHAR},
+               pre_product_date=#{preProductDate,jdbcType=NVARCHAR},
+               product_id=#{productId,jdbcType=NVARCHAR},
+               boxbarcode=#{boxbarcode,jdbcType=NVARCHAR},
+               packbarcode=#{packbarcode,jdbcType=NVARCHAR}
+               where id=#{id,jdbcType=INTEGER}                 
+  </update>       
+  <select id="getQCPPByID" resultMap="QCPPResultMap">
+       select * from qc_plan_production where id=#{id,jdbcType=INTEGER} 
+  </select>
+  <select id="checkQCPP" resultMap="QCPPResultMap">
+       select * from qc_plan_production where pono=#{pono,jdbcType=NVARCHAR}
+  </select>
+  <select id="getQCPPPageSize" parameterType="com.gangdian.qc.model.QCProductPlan" resultType="int">
+       select count(*) from qc_plan_production where 1=1
+       <if test="id != null and id !=''"> and id=#{id,jdbcType=INTEGER} </if>
+       <if test="pono != null and pono !=''"> and pono like '%'+#{pono,jdbcType=NVARCHAR}+'%' </if>
+       <if test="model != null and model !=''"> and model like '%'+#{model,jdbcType=NVARCHAR}+'%' </if>
+       <if test="productSpecific != null and productSpecific !=''"> and product_specific like '%'+#{productSpecific,jdbcType=NVARCHAR}+'%' </if>
+       <if test="orderNumber != null "> and order_number=#{orderNumber,jdbcType=INTEGER} </if>
+       <if test="finishNumber != null "> and finish_number=#{finishNumber,jdbcType=INTEGER} </if>
+       <if test="preProductDate != null and preProductDate !=''"> and pre_product_date=#{preProductDate,jdbcType=NVARCHAR} </if>
+       <if test="preShipmentDate != null and preShipmentDate !=''"> and pre_shipment_date=#{preShipmentDate,jdbcType=NVARCHAR} </if>
+       <if test="productStatus != null and productStatus !=''"> and product_status=#{productStatus,jdbcType=NVARCHAR} </if>
+       <if test="boxbarcode != null and boxbarcode !=''"> and boxbarcode=#{boxbarcode,jdbcType=NVARCHAR} </if>
+       <if test="packbarcode != null and packbarcode !=''"> and packbarcode=#{packbarcode,jdbcType=NVARCHAR} </if>
+  </select>
+  <select id="getQCPPPageList" resultMap="QCPPResultMap">
+         select * from
+         (select ROW_NUMBER() over (order by
+         <if test="sort != null and sort != '' and order != null and order != ''">${sort} ${order},</if>
+          id desc) as RowNum,* from qc_plan_production where 1=1
+          <if test="record != null ">
+          <if test="record.id != null and record.id !=''"> and id=#{record.id,jdbcType=INTEGER} </if>
+          <if test="record.pono != null and record.pono !=''"> and pono like '%'+#{record.pono,jdbcType=NVARCHAR}+'%' </if>
+          <if test="record.model != null and record.model !=''"> and model like '%'+#{record.model,jdbcType=NVARCHAR}+'%' </if>
+          <if test="record.productSpecific != null and record.productSpecific !=''"> and product_specific like '%'+#{record.productSpecific,jdbcType=NVARCHAR}+'%' </if>
+          <if test="record.orderNumber != null "> and order_number=#{record.orderNumber,jdbcType=INTEGER} </if>
+          <if test="record.finishNumber != null "> and finish_number=#{record.finishNumber,jdbcType=INTEGER} </if>
+          <if test="record.preProductDate != null and record.preProductDate !=''"> and pre_product_date=#{record.preProductDate,jdbcType=NVARCHAR} </if>
+          <if test="record.preShipmentDate != null and record.preShipmentDate !=''"> and pre_shipment_date=#{record.preShipmentDate,jdbcType=NVARCHAR} </if>
+          <if test="record.productStatus != null and record.productStatus !=''"> and product_status=#{record.productStatus,jdbcType=NVARCHAR} </if>
+          <if test="record.boxbarcode != null and record.boxbarcode !=''"> and boxbarcode=#{record.boxbarcode,jdbcType=NVARCHAR} </if>
+          <if test="record.packbarcode != null and record.packbarcode !=''"> and packbarcode=#{record.packbarcode,jdbcType=NVARCHAR} </if>
+          </if>
+          ) as temp
+         <if test="rows != null and page != null">
+         where RowNum between (#{page,jdbcType=INTEGER}-1)*#{rows,jdbcType=INTEGER}+1 and #{page,jdbcType=INTEGER}*#{rows,jdbcType=INTEGER}
+         </if>
+  </select>
+  
+  <select id="getAllQCPP" resultMap="QCPPResultMap">
+         select * from qc_plan_production 
+  </select>
+  
+  <select id="getByPono" resultMap="QCPPResultMap">
+         select * from qc_plan_production where pono=#{pono,jdbcType=NVARCHAR}
+  </select>
+   <update id="updateQCPPStatus">
+         update qc_plan_production set product_status=#{productStatus,jdbcType=NVARCHAR},
+         lastUpUser=#{lastUpUser,jdbcType=NVARCHAR}
+         where id=#{id,jdbcType=INTEGER}
+   </update>
+  
+</mapper>

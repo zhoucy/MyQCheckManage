@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" version="2.5">
+  <!-- <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+			/WEB-INF/spring-servlet.xml,/WEB-INF/sp-db.xml
+	</param-value>
+  </context-param>
+   -->
+  <!-- 加载spring配置文件 -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring-servlet.xml,classpath:sp-db.xml;</param-value>
+	</context-param>
+  
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  
+  <servlet>
+    <servlet-name>spring</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet> 
+  <servlet-mapping>
+    <servlet-name>spring</servlet-name>
+    <url-pattern>*.do</url-pattern>
+  </servlet-mapping>
+  <filter>
+    <filter-name>characterEncodingFilter</filter-name>
+    <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+    <init-param>
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+    <init-param>
+      <param-name>forceEncoding</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>characterEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+  <servlet>
+    <servlet-name>Systemup</servlet-name>
+    <servlet-class>com.springmvc.sys.Systemup</servlet-class>
+    <load-on-startup>2</load-on-startup>
+  </servlet>
+  <!-- 配置log4j -->
+      <context-param>  
+        <param-name>log4jConfigLocation</param-name>  
+        <param-value>classpath:log4j.properties</param-value>  
+    </context-param>  
+      
+    <context-param>  
+        <param-name>log4jRefreshInterval</param-name>  
+        <param-value>3000</param-value>  
+    </context-param>  
+  
+<listener>  
+        <listener-class>  
+            org.springframework.web.util.Log4jConfigListener  
+        </listener-class>
+    </listener>  
+  
+   <session-config>
+	<session-timeout>200</session-timeout>
+   </session-config> 
+<!-- 配置jasper图片 -->
+<servlet> 
+<servlet-name>ImageServlet</servlet-name> 
+<servlet-class>net.sf.jasperreports.j2ee.servlets.ImageServlet</servlet-class> 
+</servlet> 
+<!--增加报表图片映射路径，映射的是jasper文件所在的路径--> 
+<servlet-mapping> 
+<servlet-name>ImageServlet</servlet-name> 
+<url-pattern>/jasper</url-pattern> 
+</servlet-mapping> 
+<!-- 配置登陆过滤器 -->
+	<filter>
+        <filter-name>login</filter-name>
+        <filter-class>com.springmvc.filter.LoginFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>login</filter-name>
+        <url-pattern>/*</url-pattern>
+	</filter-mapping>
+	<!-- 配置权限过滤器 -->
+	<filter>
+        <filter-name>AdminCheck</filter-name>
+        <filter-class>com.springmvc.filter.AdminLoginCheck</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>AdminCheck</filter-name>
+        <url-pattern>/qc/*</url-pattern>
+	</filter-mapping>
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+</web-app>

@@ -1,0 +1,437 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gangdian.qc.dao.ProductMainDao" >
+  <resultMap id="BaseResultMap" type="com.gangdian.qc.model.ProductMain" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="productDate" property="productDate" jdbcType="NVARCHAR" />
+    <result column="pono" property="pono" jdbcType="NVARCHAR" />
+    <result column="model" property="model" jdbcType="NVARCHAR" />
+    <result column="sumWorker" property="sumWorker" jdbcType="INTEGER" />
+    <result column="targetProduct" property="targetProduct" jdbcType="INTEGER" />
+    <result column="standardProduct" property="standardProduct" jdbcType="INTEGER" />
+    <result column="groupid" property="groupid" jdbcType="INTEGER" />
+    <result column="prodectType" property="prodectType" jdbcType="NVARCHAR" />
+    <result column="productTime" property="productTime" jdbcType="TIMESTAMP" />
+    <result column="endTime" property="endTime" jdbcType="TIMESTAMP" />
+    <result column="progress" property="progress" jdbcType="INTEGER" />
+    <result column="productid" property="productid" jdbcType="INTEGER" />
+  </resultMap>
+ 
+  <resultMap id="FailAndBaseResultMap" type="com.gangdian.qc.model.ProductMain" >
+    <id column="p_id" property="id" jdbcType="INTEGER" />
+    <result column="productDate" property="productDate" jdbcType="NVARCHAR" />
+    <result column="pono" property="pono" jdbcType="NVARCHAR" />
+    <result column="model" property="model" jdbcType="NVARCHAR" />
+    <result column="sumWorker" property="sumWorker" jdbcType="INTEGER" />
+    <result column="targetProduct" property="targetProduct" jdbcType="INTEGER" />
+    <result column="standardProduct" property="standardProduct" jdbcType="INTEGER" />
+    <result column="groupid" property="groupid" jdbcType="INTEGER" />
+    <result column="prodectType" property="prodectType" jdbcType="NVARCHAR" />
+    <result column="productTime" property="productTime" jdbcType="TIMESTAMP" />
+    <result column="progress" property="progress" jdbcType="INTEGER" />
+    <collection property="failList" column="parent_id" javaType="QCFailDetail">
+		<result column="f_id" property="id" jdbcType="INTEGER" />
+    	<result column="f_parent_id" property="parentId" jdbcType="INTEGER" />
+    	<result column="failure_start_hour" property="failureStartHour" jdbcType="INTEGER" />
+    	<result column="failure_end_hour" property="failureEndHour" jdbcType="INTEGER" />
+    	<result column="failure_count_hours" property="failureCountHours" jdbcType="INTEGER" />
+    	<result column="use_workers" property="useWorkers" jdbcType="INTEGER" />
+    	<result column="use_sum_hours" property="useSumHours" jdbcType="INTEGER" />
+    	<result column="failure_reason" property="failureReason" jdbcType="NVARCHAR" />
+    	<result column="lead_person" property="leadPerson" jdbcType="NVARCHAR" />
+    	<result column="solution" property="solution" jdbcType="NVARCHAR" />
+    	<result column="remark" property="remark" jdbcType="NVARCHAR" />
+	</collection>
+    <collection property="workerDetails" column="parent_id" javaType="com.gangdian.qc.model.QCWorkerDetail">
+		 <result column="w_id" property="id" jdbcType="INTEGER" />
+	    <result column="w_parent_id" property="parentId" jdbcType="INTEGER" />
+	    <result column="hourPeriod" property="hourperiod" jdbcType="NVARCHAR" />
+	    <result column="worker_amount" property="workerAmount" jdbcType="INTEGER" />
+	    <result column="get_workers" property="getWorkers" jdbcType="INTEGER" />
+	    <result column="get_workers_group" property="getWorkersGroup" jdbcType="NVARCHAR" />
+	    <result column="get_workers_m" property="getWorkersM" jdbcType="INTEGER" />
+	    <result column="borrow_workers" property="borrowWorkers" jdbcType="INTEGER" />
+	    <result column="borrow_workers_group" property="borrowWorkersGroup" jdbcType="NVARCHAR" />
+	    <result column="borrow_workers_m" property="borrowWorkersM" jdbcType="INTEGER" />
+	    <result column="work_minute" property="workMinute" jdbcType="INTEGER" />
+	</collection>
+  </resultMap>
+  
+  <resultMap id="RecordAndBaseResultMap" type="com.gangdian.qc.model.ProductMain" >
+    <id column="p_id" property="id" jdbcType="INTEGER" />
+    <result column="productDate" property="productDate" jdbcType="NVARCHAR" />
+    <result column="pono" property="pono" jdbcType="NVARCHAR" />
+    <result column="model" property="model" jdbcType="NVARCHAR" />
+    <result column="sumWorker" property="sumWorker" jdbcType="INTEGER" />
+    <result column="targetProduct" property="targetProduct" jdbcType="INTEGER" />
+    <result column="standardProduct" property="standardProduct" jdbcType="INTEGER" />
+    <result column="groupid" property="groupid" jdbcType="INTEGER" />
+    <result column="progress" property="progress" jdbcType="INTEGER" />
+    <result column="productTime" property="productTime" jdbcType="TIMESTAMP" />
+    <result column="prodectType" property="prodectType" jdbcType="NVARCHAR" />
+    <collection property="recordList" column="id" javaType="QCCheckRecord">
+	 	<result column="QCCheckProjectID" jdbcType="NVARCHAR" property="qccheckprojectid" />
+   	 	<result column="c_id" jdbcType="INTEGER" property="id" />
+     	<result column="parent_id" jdbcType="INTEGER" property="parentId" />
+     	<result column="insertDate" jdbcType="TIMESTAMP" property="insertdate" />
+	</collection>
+  </resultMap>
+  
+  	
+  <sql id="Base_Column_List" >
+    id, productid,productDate, pono, model, sumWorker, targetProduct, standardProduct, groupid, productTime,progress,
+    case when prodectType='D' then '定型器' when prodectType='C' then '卷发器'  when prodectType='S' then '直发器' end prodectType  </sql>
+  
+  <select id="findFailAndMain" parameterType="string" resultType="com.gangdian.qc.model.ProductMain" resultMap="FailAndBaseResultMap">
+	select *,p.id as p_id, f.id as f_id ,w.id as w_id, w.parent_id w_parent_id,f.parent_id f_parent_id
+	 from product_main p left join qc_fail_detail f on p.id=f.parent_id 
+	 left join  qc_worker_detail w on p.id=w.parent_id 
+	
+  </select>
+  <select id="findRecordAndMain" parameterType="string" resultType="com.gangdian.qc.model.ProductMain" resultMap="RecordAndBaseResultMap">
+	select *,p.id as p_id, c.id as c_id from product_main p left join QCCheckRecord c on p.id=c.parent_id
+	where p.name like "%"#{value}"%"
+  </select>
+ 
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_main
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <!-- 根据日期获取所有的订单信息 -->
+  <select id="selectByDate" resultMap="BaseResultMap" parameterType="string" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_main
+    where product_date = #{productDate,jdbcType=NVARCHAR} 
+  </select>
+  <!-- 根据当前日期和组别获取所有的订单号 -->
+  <select id="selectByGroupId" resultMap="BaseResultMap" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_main
+    where productDate = convert(varchar, getdate(),23) 
+    and groupid= #{groupid,jdbcType=INTEGER}
+     <if test="progress != null" >
+      and  progress=  #{progress,jdbcType=INTEGER}
+     </if>
+    order by id desc
+  </select>
+
+  <!-- 根据订单获取该订单的完成数量 -->
+  <select id="selectByPono" resultMap="RecordAndBaseResultMap" parameterType="string" >
+    select count(*)
+    from product_main  p   left join QCCheckRecord  on parent_id=p.id
+    where pono = #{pono,jdbcType=NVARCHAR}
+    group by pono
+  </select>
+  <select id="queryMaxId"  resultType="int">
+    select max(id) from product_main
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from product_main
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.gangdian.qc.model.ProductMain" >
+    insert into product_main ( id,productDate, pono, 
+      model, sumWorker, targetProduct, 
+      standardProduct, groupid, prodectType,progress,productTime,productid
+      )
+    values (#{id}, #{productDate,jdbcType=NVARCHAR}, #{pono,jdbcType=NVARCHAR}, 
+      #{model,jdbcType=NVARCHAR}, #{sumWorker,jdbcType=INTEGER}, #{targetProduct,jdbcType=INTEGER}, 
+      #{standardProduct,jdbcType=INTEGER}, #{groupid,jdbcType=INTEGER}, #{prodectType,jdbcType=NVARCHAR},
+      #{progress,jdbcType=INTEGER},#{productTime,jdbcType=TIMESTAMP},#{productid,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gangdian.qc.model.ProductMain"  keyProperty="id" useGeneratedKeys="true">
+    insert into product_main
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      
+      <if test="id != null" >
+        id,
+      </if>     
+       <if test="productDate != null" >
+        productDate,
+      </if>
+      <if test="pono != null" >
+        pono,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="sumWorker != null" >
+        sumWorker,
+      </if>
+      <if test="targetProduct != null" >
+        targetProduct,
+      </if>
+      <if test="standardProduct != null" >
+        standardProduct,
+      </if>
+      <if test="groupid != null" >
+        groupid,
+      </if>
+      <if test="prodectType != null" >
+        prodectType,
+      </if>
+      <if test="progress != null" >
+        progress,
+      </if>      
+      <if test="productid != null" >
+        productid,
+      </if>
+      <if test="productTime != null" >
+        productTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="productDate != null" >
+        #{productDate,jdbcType=NVARCHAR},
+      </if>
+      <if test="pono != null" >
+        #{pono,jdbcType=NVARCHAR},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=NVARCHAR},
+      </if>
+      <if test="sumWorker != null" >
+        #{sumWorker,jdbcType=INTEGER},
+      </if>
+      <if test="targetProduct != null" >
+        #{targetProduct,jdbcType=INTEGER},
+      </if>
+      <if test="standardProduct != null" >
+        #{standardProduct,jdbcType=INTEGER},
+      </if>
+      <if test="groupid != null" >
+        #{groupid,jdbcType=INTEGER},
+      </if>
+      <if test="prodectType != null" >
+        #{prodectType,jdbcType=NVARCHAR},
+      </if>
+      <if test="progress != null" >
+         #{progress,jdbcType=INTEGER},
+      </if>
+      <if test="productid != null" >
+         #{productid,jdbcType=INTEGER},
+      </if>
+      <if test="productTime != null" >
+        #{productTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gangdian.qc.model.ProductMain" >
+    update product_main
+    <set >
+   
+      <if test="productDate != null" >
+        productDate = #{productDate,jdbcType=NVARCHAR},
+      </if>
+      <if test="pono != null" >
+        pono = #{pono,jdbcType=NVARCHAR},
+      </if>
+      <if test="model != null" >
+        model = #{model,jdbcType=NVARCHAR},
+      </if>
+      <if test="sumWorker != null" >
+        sumWorker = #{sumWorker,jdbcType=INTEGER},
+      </if>
+      <if test="targetProduct != null" >
+        targetProduct = #{targetProduct,jdbcType=INTEGER},
+      </if>
+      <if test="standardProduct != null" >
+        standardProduct = #{standardProduct,jdbcType=INTEGER},
+      </if>
+      <if test="groupid != null" >
+        groupid = #{groupid,jdbcType=INTEGER},
+      </if>
+      <if test="prodectType != null" >
+        prodectType = #{prodectType,jdbcType=NVARCHAR},
+      </if>
+       <if test="progress != null" >
+       progress=  #{progress,jdbcType=INTEGER},
+      </if>
+        <if test="productTime != null" >
+       productTime= #{productTime,jdbcType=TIMESTAMP},
+      </if>
+       <if test="endTime != null" >
+      endTime=   #{endTime,jdbcType=TIMESTAMP},
+      </if>
+     
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gangdian.qc.model.ProductMain" >
+    update product_main
+    set productDate = #{productDate,jdbcType=NVARCHAR},
+      pono = #{pono,jdbcType=NVARCHAR},
+      model = #{model,jdbcType=NVARCHAR},
+      sumWorker = #{sumWorker,jdbcType=INTEGER},
+      targetProduct = #{targetProduct,jdbcType=INTEGER},
+      standardProduct = #{standardProduct,jdbcType=INTEGER},
+      groupid = #{groupid,jdbcType=INTEGER},
+      prodectType = #{prodectType,jdbcType=NVARCHAR},
+       progress=  #{progress,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <select id="selectByOther" resultType="com.gangdian.qc.model.ProductMain" parameterType="com.gangdian.qc.model.ProductMain" >
+    select 
+    <include refid="Base_Column_List" />
+    from product_main
+    where 1=1 
+     <if test="productDate != null" >
+   	 and  productDate = #{productDate,jdbcType=NVARCHAR}
+   	 </if>
+     <if test="pono != null" >
+      and  pono = #{pono,jdbcType=NVARCHAR}
+      </if>
+      <if test="groupid != null" >
+      and  groupid = #{groupid,jdbcType=INTEGER}
+      </if>
+      <if test="prodectType != null" >
+       and  prodectType = #{prodectType,jdbcType=NVARCHAR}
+      </if>
+      <if test="progress != null" >
+      and  progress=  #{progress,jdbcType=INTEGER}
+      </if>
+      <if test="id != null" >
+      and  id=  #{id,jdbcType=INTEGER}
+      </if>
+  </select>
+  <select id="selectByOtherMax" resultType="com.gangdian.qc.model.ProductMain" parameterType="com.gangdian.qc.model.ProductMain" >
+    select  
+    <include refid="Base_Column_List" />
+    from product_main
+    where 1=1 
+     <if test="productDate != null" >
+   	 and  productDate = #{productDate,jdbcType=NVARCHAR}
+   	 </if>
+     <if test="pono != null" >
+      and  pono = #{pono,jdbcType=NVARCHAR}
+      </if>
+      <if test="groupid != null" >
+      and  groupid = #{groupid,jdbcType=INTEGER}
+      </if>
+      <if test="prodectType != null" >
+       and  prodectType = #{prodectType,jdbcType=NVARCHAR}
+      </if>
+      <if test="progress != null" >
+      and  progress=  #{progress,jdbcType=INTEGER}
+      </if>
+      <if test="id != null" >
+      and  id=  #{id,jdbcType=INTEGER}
+      </if>
+      <if test="id==null or id ==''">
+      and id in (select max(id) from product_main group by productDate,groupid,progress)
+      </if>
+  </select>
+  <select id="selectAllMain" resultType="com.gangdian.qc.model.ProductMain" parameterType="com.gangdian.qc.model.ProductMain" >
+    select  
+    <include refid="Base_Column_List" />
+    from product_main
+    where 1=1 
+     <if test="productDate != null" >
+   	 and  productDate = #{productDate,jdbcType=NVARCHAR}
+   	 </if>
+     <if test="pono != null" >
+      and  pono = #{pono,jdbcType=NVARCHAR}
+      </if>
+      <if test="groupid != null" >
+      and  groupid = #{groupid,jdbcType=INTEGER}
+      </if>
+      <if test="prodectType != null" >
+       and  prodectType = #{prodectType,jdbcType=NVARCHAR}
+      </if>
+      <if test="progress != null" >
+      and  progress=  #{progress,jdbcType=INTEGER}
+      </if>
+    
+  </select>
+  
+    <select id="getMainPageSize" parameterType="com.gangdian.qc.model.ProductMain" 
+  resultType="com.gangdian.qc.model.ProductMain">
+        select * from product_main where 1=1
+       <if test="id != null"> and  id=#{record.id,jdbcType=INTEGER}</if>
+        <if test="pono != null and pono !=''" > and pono like  '%'+#{pono,jdbcType=NVARCHAR}+'%'</if>
+        <if test="model != null and model !=''" > and model like  '%'+#{model,jdbcType=NVARCHAR}+'%'</if>
+        
+        <if test="groupid != null and groupid !=''" > and groupid  like  '%'+ #{groupid,jdbcType=INTEGER}+'%'</if>
+        <if test="prodectType != null and prodectType !=''" > and prodectType = #{prodectType,jdbcType=NVARCHAR}</if>
+        <if test="progress != null and progress !=''" > and progress = #{progress,jdbcType=INTEGER}</if>
+        <if test="productDate != null and productDate !=''" > and productDate = #{productDate,jdbcType=NVARCHAR}</if>
+      </select>
+  
+  <!-- 分页查询所有 -->
+   <select id="getMainPageList" resultType="com.gangdian.qc.model.ProductMain">
+        select * from
+        (select ROW_NUMBER() over (order by
+        <if test="sort != null and sort != '' and order != null and order != ''">${sort} ${order},</if> 
+        id) as RowNum,* from product_main where 1=1
+        <if test="record != null "> 
+        <if test="record.id != null"> and  id=#{record.id,jdbcType=INTEGER}</if>
+        <if test="record.pono != null and record.pono !=''" > and pono like  '%'+ #{record.pono,jdbcType=NVARCHAR}+'%'</if>
+        <if test="record.model != null and record.model !=''" > and model like  '%'+ #{record.model,jdbcType=NVARCHAR}+'%'</if>
+        <if test="record.groupid != null and record.groupid !=''" > and groupid like  '%'+ #{record.groupid,jdbcType=INTEGER}+'%'</if>
+        <if test="record.prodectType != null and record.prodectType !=''" > and prodectType = #{record.prodectType,jdbcType=NVARCHAR}</if>
+        <if test="record.progress != null and record.progress !=''" > and progress = #{record.progress,jdbcType=INTEGER}</if>
+        <if test="record.productDate != null and record.productDate !=''" > and productDate = #{record.productDate,jdbcType=NVARCHAR}</if>
+        </if>
+        ) as temp
+        <if test="rows != null and page != null">
+        where RowNum between (#{page,jdbcType=INTEGER}-1)*#{rows,jdbcType=INTEGER}+1 and #{page,jdbcType=INTEGER}*#{rows,jdbcType=INTEGER}
+        </if>
+  </select>
+  
+    <!-- 查询订单数量和累计生产数量 2016-08-18-->
+  <select id="selectProductNum" resultType="map"  parameterType="com.gangdian.qc.model.ProductMain" >
+    select  a.pono, 
+            c.order_number,
+            sum(case when b.QCCheckProjectID='P01' then 1 else 0 end)   as productNum,
+            (select  count(*)
+                from    product_main a1 inner join QCCheckRecord b1  on a1.id=b1.parent_id
+                where   a1.pono = a.pono and b1.QCCheckProjectid='P01'
+             ) as   allPonoNum
+             
+    from product_main a inner join QCCheckRecord b on a.id=b.parent_id
+         inner join qc_plan_production c on a.pono= c.pono
+    where   productDate=CONVERT(varchar ,getdate(),23)
+            and a.groupid=#{groupid,jdbcType=INTEGER}
+            <if test="progress!=null and progress !=''">
+             and a.progress=#{progress,jdbcType=INTEGER}
+            </if>        
+            <if test="id!=null and id !=''">
+             and a.id=#{id,jdbcType=INTEGER}
+            </if> 
+            <if test="id==null or id ==''">
+             and a.id in (select max(id) from product_main group by productDate,groupid,progress)     
+            </if>
+    group by  a.pono,c.order_number
+
+  </select>
+ 
+<select id="getTodayPMByGroupid" resultType="java.util.HashMap">
+select pm.id,pm.pono,dept.name,pt.product_name,pm.model oldmodel,pr.model newmodel,
+qp.progress_name,pm.sumWorker,pm.targetProduct,pm.standardProduct,
+pm.productTime,pm.endTime,pm.productDate,pp.order_number,
+(select COUNT(distinct serialnum) from swipedata where pono=pm.pono) as finish_number,0 temp
+from product_main pm left join department dept on dept.id=pm.groupid
+left join qc_product_type pt on pt.product_no=pm.prodectType
+left join qc_progress qp on qp.progress_code=pm.progress
+left join qc_product_record pr on pr.id=pm.productid
+left join qc_plan_production pp on pp.pono=pm.pono
+where productDate=convert(varchar(10),getdate(),120) 
+and groupid=#{groupid,jdbcType=INTEGER}
+</select>
+
+<select id="lockProducingQCPM" resultType="java.util.HashMap">
+  select top 1 pm.pono pono,pm.id pmid,pp.id planid,pm.model,pm.prodectType
+  from product_main pm left join qc_plan_production pp on pm.pono=pp.pono
+  where productDate=convert(varchar(10),getdate(),120) and endTime is null 
+  and groupid=#{groupid,jdbcType=INTEGER}
+  order by productTime desc
+</select>
+</mapper>

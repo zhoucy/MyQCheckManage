@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gangdian.qc.dao.QCCheckProjectDao" >
+  <resultMap id="BaseResultMap" type="com.gangdian.qc.model.QCCheckProject" >
+    <id column="id" property="id" jdbcType="NVARCHAR" />
+    <result column="name" property="name" jdbcType="NVARCHAR" />
+    <result column="barcodeimg" property="barcodeimg" jdbcType="NVARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, name, barcodeimg
+  </sql>
+  
+  <select id="listAllProject" resultMap="BaseResultMap">
+  select * from QCCheckProject
+  </select>
+  <select id="getProjectCount" resultType="int" parameterType="QCCheckProject">
+  select count(*) from QCCheckProject where 1=1
+  <if test="id != null" >
+       and   id like '%'+#{id}+'%'
+      </if>
+      <if test="name != null" >
+        and  name  like  '%'+#{name}+'%'
+      </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from QCCheckProject
+    where id = #{id,jdbcType=NVARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from QCCheckProject
+    where id = #{id,jdbcType=NVARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.gangdian.qc.model.QCCheckProject" >
+    insert into QCCheckProject (id, name, barcodeimg
+      )
+    values (#{id,jdbcType=NVARCHAR}, #{name,jdbcType=NVARCHAR}, #{barcodeimg,jdbcType=NVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.gangdian.qc.model.QCCheckProject" >
+    insert into QCCheckProject
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="barcodeimg != null" >
+        barcodeimg,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=NVARCHAR},
+      </if>
+      <if test="name != null" >
+        #{name,jdbcType=NVARCHAR},
+      </if>
+      <if test="barcodeimg != null" >
+        #{barcodeimg,jdbcType=NVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gangdian.qc.model.QCCheckProject" >
+    update QCCheckProject
+    <set >
+      <if test="name != null" >
+        name = #{name,jdbcType=NVARCHAR},
+      </if>
+      <if test="barcodeimg != null" >
+        barcodeimg = #{barcodeimg,jdbcType=NVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=NVARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gangdian.qc.model.QCCheckProject" >
+    update QCCheckProject
+    set name = #{name,jdbcType=NVARCHAR},
+      barcodeimg = #{barcodeimg,jdbcType=NVARCHAR}
+    where id = #{id,jdbcType=NVARCHAR}
+  </update>
+  <select id="queryPageProject" resultType="com.gangdian.qc.model.QCCheckProject"  >
+  	  select  top ${pageSize} *
+    from QCCheckProject where id  not in ( select top ${startIndex} id  from  QCCheckProject 
+    where 1=1 
+      <if test="id != null" >
+       and   id like '%'+#{id}+'%'
+      </if>
+      <if test="name != null" >
+        and  name  like '%'+#{name}+'%'
+      </if>
+    
+    )
+      <if test="id != null" >
+       and   id like '%'+#{id}+'%'
+      </if>
+      <if test="name != null" >
+        and  name  like  '%'+#{name}+'%'
+      </if>
+	    
+    
+  
+  </select>
+  
+  
+</mapper>

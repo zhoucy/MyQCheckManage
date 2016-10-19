@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gangdian.qc.dao.QCProductRecordDao" >
+  <resultMap id="BaseResultMap" type="com.gangdian.qc.model.QCProductRecord" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="model" property="model" jdbcType="NVARCHAR" />
+    <result column="material_code" property="materialCode" jdbcType="NVARCHAR" />
+    <result column="product_specific" property="productSpecific" jdbcType="NVARCHAR" />
+    <result column="product_type" property="productType" jdbcType="NVARCHAR" />
+  </resultMap>
+  
+    <resultMap id="productAndProgress" type="com.gangdian.qc.model.QCProductRecord" >
+	    <id column="p_id" property="id" jdbcType="INTEGER" />
+	    <result column="p_model" property="model" jdbcType="NVARCHAR" />
+	    <result column="product_specific" property="productSpecific" jdbcType="NVARCHAR" />
+	    <result column="material_code" property="materialCode" jdbcType="NVARCHAR" />
+	    <result column="product_type" property="productType" jdbcType="NVARCHAR" />
+	    <collection property="progressManHours" column="model" resultMap="com.gangdian.qc.dao.QCProgressManHourDao.progressAndProduct2" >
+	 			<id column="pp_id" property="id" jdbcType="INTEGER" />
+			    <result column="pp_model" property="model" jdbcType="NVARCHAR" />
+			    <result column="progressid" property="progressid" jdbcType="INTEGER" />
+			    <result column="man_minute" property="manMinute" jdbcType="INTEGER" />
+			    <result column="man_hour" property="manHour" jdbcType="NUMERIC" />
+			    <result column="balance" property="balance" jdbcType="NUMERIC" />				
+		</collection>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, model, product_specific,product_type,material_code
+  </sql>
+  
+  <!-- 获取所有的带有工序的产品信息 -->
+   <select id="productGetProgress" resultMap="productAndProgress" parameterType="string">
+		select  p.id p_id,p.model p_model,pp.id pp_id,pp.model pp_model,*,material_code
+		from qc_product_record  p
+		left join qc_progress_man_hour pp   on p.model=pp.model
+		where  1=1
+		<if test="model !=null">
+		and p.model=#{model}
+		</if>
+		
+	</select>
+   <select id="selectByID" resultMap="BaseResultMap" parameterType="string">
+		 select 
+    <include refid="Base_Column_List" />
+   	 	from qc_product_record
+		where  1=1
+		and model=#{model}
+	</select>
+	<!-- 获取带有工序的产品集合分页 -->
+   <select id="productGetProgressPage" resultMap="BaseResultMap" >
+	   select * from
+        (select ROW_NUMBER() over (order by 
+        <if test="sort != null and sort != '' and order != null and order != ''">${sort} ${order},</if> 
+         id) as RowNum,  *
+		from qc_product_record 
+		where 1=1 
+        <if test="record.model!= null and record.model != ''"> 
+        	and model like '%'+#{record.model,jdbcType=NVARCHAR}+'%' 
+        </if>
+        <if test="record.productSpecific != null and record.productSpecific != ''">
+        	 and product_specific like '%'+#{record.productSpecific,jdbcType=NVARCHAR}+'%' 
+         </if>
+        <if test="record.productType != null and record.productType != ''">
+        	 and product_type =#{record.productType,jdbcType=NVARCHAR} 
+         </if>
+       
+        ) as temp
+        <if test="rows != null and page != null">
+        where RowNum between (#{page,jdbcType=INTEGER}-1)*#{rows,jdbcType=INTEGER}+1 and #{page,jdbcType=INTEGER}*#{rows,jdbcType=INTEGER}
+        </if>
+        
+		
+		
+	</select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from qc_product_record
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from qc_product_record
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.gangdian.qc.model.QCProductRecord" >
+    insert into qc_product_record (id, model, product_specific,product_type
+      )
+    values (#{id,jdbcType=INTEGER}, #{model,jdbcType=NVARCHAR}, #{productSpecific,jdbcType=NVARCHAR}
+    ,#{productType,jdbcType=NVARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.gangdian.qc.model.QCProductRecord" >
+    insert into qc_product_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="model != null" >
+        model,
+      </if>
+      <if test="productSpecific != null" >
+        product_specific,
+      </if>
+      <if test="productType != null" >
+        product_type,
+      </if>
+      <if test="materialCode != null" >
+        material_code,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="model != null" >
+        #{model,jdbcType=NVARCHAR},
+      </if>
+      <if test="productSpecific != null" >
+        #{productSpecific,jdbcType=NVARCHAR},
+      </if>
+       <if test="productType != null" >
+    	 #{productType,jdbcType=NVARCHAR},
+      </if>
+       <if test="materialCode != null" >
+        #{materialCode,jdbcType=NVARCHAR},
+      </if>
+      
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gangdian.qc.model.QCProductRecord" >
+    update qc_product_record
+    <set >
+      <if test="model != null" >
+        model = #{model,jdbcType=NVARCHAR},
+      </if>
+      <if test="productSpecific != null" >
+        product_specific = #{productSpecific,jdbcType=NVARCHAR},
+      </if>
+      <if test="productType != null" >
+    	product_type= #{productType,jdbcType=NVARCHAR},
+      </if>
+        <if test="materialCode != null" >
+        material_code=#{materialCode,jdbcType=NVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gangdian.qc.model.QCProductRecord" >
+    update qc_product_record
+    set model = #{model,jdbcType=NVARCHAR},
+      product_specific = #{productSpecific,jdbcType=NVARCHAR},
+      material_code = #{materialCode,jdbcType=NVARCHAR},
+      product_type= #{productType,jdbcType=NVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+    <select id="getPageSize" parameterType="com.gangdian.qc.model.QCProductRecord"
+                           resultType="int">
+        select count(*) from qc_product_record where 1=1 
+       <if test="model != null and model !=''"> 
+       		and model like '%'+#{model,jdbcType=NVARCHAR}+'%' 
+       </if>
+       <if test="productSpecific != null and productSpecific !=''"> 
+       	 and product_specific like '%'+#{productSpecific,jdbcType=NVARCHAR}+'%' 
+       	 </if>
+       <if test="materialCode != null and productSpecific !=''"> 
+       	 and material_code like '%'+#{materialCode,jdbcType=NVARCHAR}+'%' 
+       	 </if>
+       	   <if test="productType != null and productType != ''">
+        	 and product_type =#{productType,jdbcType=NVARCHAR} 
+         </if>
+  </select>
+  
+  
+  <select id="getPageList" parameterType="com.gangdian.qc.model.QCProductRecord"
+                           resultMap="BaseResultMap">
+         select * from
+        (select ROW_NUMBER() over (order by 
+        <if test="sort != null and sort != '' and order != null and order != ''">${sort} ${order},</if> 
+         id) as RowNum,* from qc_product_record where 1=1 
+        <if test="record.model!= null and record.model != ''"> 
+        	and model like '%'+#{record.model,jdbcType=NVARCHAR}+'%' 
+        </if>
+        <if test="record.productSpecific != null and record.productSpecific != ''">
+        	 and product_specific like '%'+#{record.productSpecific,jdbcType=NVARCHAR}+'%' 
+         </if>
+        <if test="record.materialCode != null and record.materialCode != ''">
+        	 and material_code like '%'+#{record.materialCode,jdbcType=NVARCHAR}+'%' 
+         </if>
+       
+        ) as temp
+        <if test="rows != null and page != null">
+        where RowNum between (#{page,jdbcType=INTEGER}-1)*#{rows,jdbcType=INTEGER}+1 and #{page,jdbcType=INTEGER}*#{rows,jdbcType=INTEGER}
+        </if>
+                                   
+  </select>
+  
+   
+    <select id="checkProduct" parameterType="com.gangdian.qc.model.QCProductRecord"
+  			resultType="com.gangdian.qc.model.QCProductRecord">
+        select * from qc_product_record where 1=1
+        <if test="id != null" > and id =#{id,jdbcType=INTEGER}</if>
+        <if test="model != null" > and model =#{model,jdbcType=INTEGER}</if>
+        <if test="productSpecific != null and productSpecific !=''" > and product_specific =#{productSpecific,jdbcType=NVARCHAR}</if>
+		<if test="productType != null and productType != ''">and product_type like =#{productType,jdbcType=NVARCHAR}</if>
+          </select>
+  
+  <select id="getAllQCPR" resultMap="BaseResultMap">
+        select * from qc_product_record
+  </select>
+  
+</mapper>

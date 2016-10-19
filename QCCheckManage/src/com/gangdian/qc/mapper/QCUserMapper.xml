@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gangdian.qc.dao.QCUserDao">
+  <resultMap id="userResultMap" type="com.gangdian.qc.model.QCUser">
+    <id column="id" jdbcType="NVARCHAR" property="id" />
+    <result column="name" jdbcType="NVARCHAR" property="name" />
+    <result column="password" jdbcType="NVARCHAR" property="password" />
+    <result column="groupid" jdbcType="INTEGER" property="groupid" />
+    <result column="departmentid" jdbcType="INTEGER" property="departmentid" />
+  </resultMap>
+  
+  <resultMap type="QCUser" id="userAndRoleResultMap">
+	<result column="u_id" property="id" jdbcType="NVARCHAR"/>
+	<result column="name" property="name"/>
+	<result column="password" property="password"/>
+	<result column="groupid" jdbcType="INTEGER" property="groupid" />
+    <result column="departmentid" jdbcType="INTEGER" property="departmentid" />
+	<association property="user2Role" column="user_id" javaType="User2Role" >
+		 <id column="r_id" jdbcType="INTEGER" property="id" />
+ 		<result column="user_id" property="userId" jdbcType="NVARCHAR" />
+   		<result column="role_id" property="roleId" jdbcType="INTEGER" />
+			
+	</association>
+    </resultMap> 
+  <resultMap type="QCUser" id="userDptResultMap">
+	<result column="u_id" property="id" jdbcType="NVARCHAR"/>
+	<result column="u_name" property="name"/>
+	<result column="password" property="password"/>
+	<result column="groupid" jdbcType="INTEGER" property="groupid" />
+    <result column="departmentid" jdbcType="INTEGER" property="departmentid" />
+	<association property="dpt" column="id" javaType="com.gangdian.qc.model.Department" >
+	    <result column="code" property="code" jdbcType="NVARCHAR" />
+	    <result column="d_name" property="name" jdbcType="NVARCHAR" />
+	    <result column="leader" property="leader" jdbcType="NVARCHAR" />
+	    <result column="belong" property="belong" jdbcType="NVARCHAR" />
+	</association>
+    </resultMap> 
+  
+  <sql id="Base_Column_List">
+    id, name, password, groupid, departmentid
+  </sql>
+
+  
+  <select id="listAllUser" resultMap="userAndRoleResultMap">
+		select u.name ,u.password,departmentid, u.id u_id,user_id,role_id
+		from QCUser u 
+		left join User_Role  on u.id=user_id 
+	
+	</select>
+  <select id="getUserDpt" resultMap="userDptResultMap" >
+		select *, u.id u_id,u.name u_name,d.name d_name
+		from QCUser u 
+		left join department d  on u.departmentid=d.id 
+	
+	</select>
+	
+	<!-- 查询所有用户总数 -->
+<select id="getAllQCUsersNumbers" parameterType="QCUser"  resultType="int">
+	select count(*) from QCuser where 1=1 
+	 <if test="id != null" >
+       and   id like '%'+#{id}+'%'
+      </if>
+      <if test="name != null" >
+        and  name  like  '%'+#{name}+'%'
+      </if>
+	    
+</select>
+
+
+
+	<select id="getUserById" parameterType="string" resultType="QCUser">
+		select * from QCUser u where u.id= #{id}
+	</select>
+
+<!-- 查询用户 -->
+<select id="getQCUsers" resultMap="userResultMap">
+	select * from QCuser
+</select>
+
+<!-- 查询用户名时候存在 -->
+<select id="checkQCUsername" parameterType="QCUser" resultMap="userAndRoleResultMap">
+		select u.name ,u.password, u.id u_id,user_id,role_id,*
+		from QCUser u left join User_Role  on u.id=user_id 
+	   where u.name = #{name} and  password=#{password};
+</select>
+<!-- 查询用户名时候存在 -->
+<select id="checkUserId" parameterType="String" resultType="QCUser">
+		select  * from qcuser
+	   where  id=#{id} 
+</select>
+
+<!-- 增加用户 -->
+<insert id="addQCUser" parameterType="QCUser" > 
+        insert into QCuser(id,name,password,departmentid)  
+             values(#{id},#{name},#{password},#{departmentid})  
+</insert>
+
+  <select id="selectByOther" resultMap="userResultMap" parameterType="QCUser" >
+    select 
+    <include refid="Base_Column_List" />
+    from qcuser
+    where 1=1 
+      <if test="id != null" >
+       and   id like '%${id}%'
+      </if>
+      <if test="name != null" >
+        and  name  like '%${name}%'
+      </if>
+    
+    
+  </select>
+
+<!-- 删除用户 -->
+<delete id="deleteQCUser" parameterType="String" >
+	delete from QCuser where id = #{id}
+</delete>
+
+<!-- 更新用户 -->
+<update id="updateQCUser" parameterType="QCUser">
+	update QCuser
+	<set >
+      <if test="password != null" >
+        password = #{password,jdbcType=NVARCHAR},
+      </if>
+      <if test="name != null" >
+        name = #{name,jdbcType=NVARCHAR},
+      </if>
+      <if test="groupid != null" >
+        groupid = #{groupid,jdbcType=INTEGER},
+      </if>
+    </set>
+	 where id = #{id}
+</update>
+
+  
+  <select id="queryPageQCUser" resultMap="userAndRoleResultMap"  parameterType="QCUser">
+  	  select  top ${pageSize} *,u.id u_id,r.id r_id
+    from QCUser as u left join User_Role r on u.id=user_id  
+    
+     where u.id  not in ( select top ${startIndex} id  from  QCUser as user2
+    where 1=1 
+      <if test="id != null" >
+       and   id like '%'+#{id}+'%'
+      </if>
+      <if test="name != null" >
+        and  name  like '%'+#{name}+'%'
+      </if>
+    
+    )
+      <if test="id != null" >
+       and   u.id like '%'+#{id}+'%'
+      </if>
+      <if test="name != null" >
+        and  name  like  '%'+#{name}+'%'
+      </if>
+	    
+    
+  
+  </select>
+  <select id="queryPageQCUser1" resultMap="userAndRoleResultMap"  parameterType="QCUser">
+  	  select  top ${pageSize} *
+    from QCUser as user1  where id  not in ( select top ${startIndex} id  from  QCUser as user2
+    where 1=1 
+      <if test="id != null" >
+       and   id like '%'+#{id}+'%'
+      </if>
+      <if test="name != null" >
+        and  name  like '%'+#{name}+'%'
+      </if>
+    
+    )
+      <if test="id != null" >
+       and   id like '%'+#{id}+'%'
+      </if>
+      <if test="name != null" >
+        and  name  like  '%'+#{name}+'%'
+      </if>
+	     
+  </select>
+  
+  
+  <select id="getUserUnionById" resultType="java.util.HashMap">
+select u.id uid,u.name uname,u.password upwd, --用户信息
+r.id rid,r.name rname,                        --角色信息
+p.id pid,p.name pname,p.url purl,             --权限信息
+dept.name deptname,dept.leader deptleader     --部门信息
+
+from QCUser u left join user_role ur on u.id=ur.user_id
+left join qc_role r on r.id=ur.role_id
+left join qc_permission p on p.id=r.permissionID
+left join department dept on dept.id=u.groupid
+
+where 1=1
+<if test="uid!=null">and u.id=#{uid,jdbcType=INTEGER}</if> 
+<if test="rid!=null">and r.id=#{rid,jdbcType=INTEGER}</if> 
+<if test="pid!=null">and p.id=#{pid,jdbcType=INTEGER}</if> 
+  </select>
+
+<select id="getUserPageListByRid" resultType="java.util.HashMap">
+select * from
+(select ROW_NUMBER() over (order by
+<if test="sort != null and sort != '' and order != null and order != ''">${sort} ${order},</if> 
+u.id) as RowNum, 
+u.id uid,u.name uname,u.password upwd,r.name rname,dept.name deptname,dept.leader deptleader
+from QCUser u left join user_role ur on u.id=ur.user_id
+left join qc_role r on ur.role_id=r.id
+left join department dept on u.groupid=dept.id
+where r.id=#{rid,jdbcType=INTEGER}
+group by u.id ,u.name ,u.password,r.name,dept.name,dept.leader) as temp 
+<if test="rows != null and page != null">
+where RowNum between (#{page,jdbcType=INTEGER}-1)*#{rows,jdbcType=INTEGER}+1 and #{page,jdbcType=INTEGER}*#{rows,jdbcType=INTEGER}
+</if>
+</select>
+</mapper>

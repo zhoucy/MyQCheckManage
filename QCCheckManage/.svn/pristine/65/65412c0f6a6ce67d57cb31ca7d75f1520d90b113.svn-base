@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gangdian.qc.dao.QCPermissionDao">
+  <resultMap id="BaseResultMap" type="com.gangdian.qc.model.QCPermission">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="NVARCHAR" property="name" />
+    <result column="fatherid" jdbcType="INTEGER" property="fatherid" />
+    <result column="url" jdbcType="NVARCHAR" property="url" />
+  </resultMap>
+  <!-- <resultMap id="permissionAndRole" type="com.gangdian.qc.model.QCPermission">
+    <id column="p_id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="NVARCHAR" property="name" />
+    <result column="fatherid" jdbcType="INTEGER" property="fatherid" />
+    <result column="url" jdbcType="NVARCHAR" property="url" />
+  
+    <collection property="qcRoles"  column="permissionID" javaType="QCRole">  
+            <id column="r_id" property="id"/>  
+            <result column="name" property="name"/>  
+    <collection> 
+  </resultMap> -->
+  <sql id="Base_Column_List">
+    id, name, fatherid, url
+  </sql>
+<!--     <select id="permissionGetRole" resultMap="permissionAndRole" parameterType="Integer">
+		select r.name r_name,r.id r_id,*
+		from qc_permission p 
+		left join   qc_role  r   on r.permissionID=p.id 
+		where p.id=#{id}
+	
+	</select> -->
+  
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from qc_permission
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from qc_permission
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.gangdian.qc.model.QCPermission">
+    insert into qc_permission (id, name, fatherid, 
+      url)
+    values (#{id,jdbcType=INTEGER}, #{name,jdbcType=NVARCHAR}, #{fatherid,jdbcType=INTEGER}, 
+      #{url,jdbcType=NVARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.gangdian.qc.model.QCPermission">
+    insert into qc_permission
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="fatherid != null">
+        fatherid,
+      </if>
+      <if test="url != null">
+        url,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=NVARCHAR},
+      </if>
+      <if test="fatherid != null">
+        #{fatherid,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        #{url,jdbcType=NVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.gangdian.qc.model.QCPermission">
+    update qc_permission
+    <set>
+      <if test="name != null">
+        name = #{name,jdbcType=NVARCHAR},
+      </if>
+      <if test="fatherid != null ">
+        fatherid = #{fatherid,jdbcType=INTEGER},
+      </if>
+      <if test="url != null">
+        url = #{url,jdbcType=NVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.gangdian.qc.model.QCPermission">
+    update qc_permission
+    set name = #{name,jdbcType=NVARCHAR},
+      fatherid = #{fatherid,jdbcType=INTEGER},
+      url = #{url,jdbcType=NVARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+ 
+ 
+ <select id="getAllPermission" resultType="com.gangdian.qc.model.QCPermission">
+      select * from qc_permission
+ </select>
+ 
+ <select id="checkPermission" resultType="int">
+      select count(*) from qc_permission where 1=1
+      <if test="id != null"> and id=#{id,jdbcType=INTEGER}</if>
+      <if test="name != null and name != ''"> and  name=#{name,jdbcType=NVARCHAR}</if>
+      <if test="fatherid != null"> and  fatherid = #{fatherid,jdbcType=INTEGER}</if>
+      <if test="url != null and url != ''"> and  url = #{url,jdbcType=NVARCHAR}</if>
+ </select>
+ 
+ <select id="getPermissionPageSize" resultType="int">
+      select count(*) from qc_permission where fatherid is null
+      <if test="id != null"> and id=#{id,jdbcType=INTEGER}</if>
+      <if test="name != null and name != ''"> and  name like '%'+#{name,jdbcType=NVARCHAR}+'%'</if>
+      <if test="fatherid != null"> and  fatherid = #{fatherid,jdbcType=INTEGER}</if>
+      <if test="url != null and url != ''"> and  url like '%'+#{url,jdbcType=NVARCHAR}+'%'</if>
+ </select>
+ 
+ <select id="getPermissionPageList" resultType="com.gangdian.qc.model.QCPermission">
+      select * from
+     (select ROW_NUMBER() over (order by 
+     <if test="sort != null and sort != '' and order != null and order != ''">${sort} ${order},</if> 
+     id) as RowNum,* from qc_permission where fatherid is null
+     <if test="record != null "> 
+     <if test="record.id != null"> and  id=#{record.id,jdbcType=INTEGER}</if>
+     <if test="record.name != null and record.name != ''"> and  name like '%'+#{record.name,jdbcType=NVARCHAR}+'%'</if>
+     <if test="record.fatherid != null"> and  fatherid = #{record.fatherid,jdbcType=INTEGER}</if>
+     <if test="record.url != null and record.url != ''"> and  url like '%'+#{record.url,jdbcType=NVARCHAR}+'%'</if>
+     </if> 
+     ) as temp
+     <if test="rows != null and page != null">
+     where RowNum between (#{page,jdbcType=INTEGER}-1)*#{rows,jdbcType=INTEGER}+1 and #{page,jdbcType=INTEGER}*#{rows,jdbcType=INTEGER}
+     </if>
+ </select>
+ 
+ <select id="getPermissionByFatherid" resultType="com.gangdian.qc.model.QCPermission">
+      select * from qc_permission where fatherid = #{fatherid,jdbcType=INTEGER}
+ </select>
+</mapper>
