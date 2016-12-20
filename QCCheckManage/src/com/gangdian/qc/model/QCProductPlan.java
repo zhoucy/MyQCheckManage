@@ -30,27 +30,11 @@ public class QCProductPlan implements Serializable{
     
     private Integer productId;  //产品表id
     
-    private String  packbarcode;//彩盒条形码
+    private Long  packbarcode;//彩盒条形码
     
-    private String  boxbarcode ;//箱子条形码
+    private Long  boxbarcode ;//箱子条形码
     
-    
-
-	public String getPackbarcode() {
-		return packbarcode;
-	}
-
-	public void setPackbarcode(String packbarcode) {
-		this.packbarcode = packbarcode;
-	}
-
-	public String getBoxbarcode() {
-		return boxbarcode;
-	}
-
-	public void setBoxbarcode(String boxbarcode) {
-		this.boxbarcode = boxbarcode;
-	}
+    private Integer boxcapacity;
 
 	public Integer getId() {
 		return id;
@@ -124,6 +108,14 @@ public class QCProductPlan implements Serializable{
 		this.productStatus = productStatus;
 	}
 
+	public String getLastUpUser() {
+		return lastUpUser;
+	}
+
+	public void setLastUpUser(String lastUpUser) {
+		this.lastUpUser = lastUpUser;
+	}
+
 	public Integer getProductId() {
 		return productId;
 	}
@@ -131,15 +123,29 @@ public class QCProductPlan implements Serializable{
 	public void setProductId(Integer productId) {
 		this.productId = productId;
 	}
-	
-	
 
-	public String getLastUpUser() {
-		return lastUpUser;
+	public Long getPackbarcode() {
+		return packbarcode;
 	}
 
-	public void setLastUpUser(String lastUpUser) {
-		this.lastUpUser = lastUpUser;
+	public void setPackbarcode(Long packbarcode) {
+		this.packbarcode = packbarcode;
+	}
+
+	public Long getBoxbarcode() {
+		return boxbarcode;
+	}
+
+	public void setBoxbarcode(Long boxbarcode) {
+		this.boxbarcode = boxbarcode;
+	}
+
+	public Integer getBoxcapacity() {
+		return boxcapacity;
+	}
+
+	public void setBoxcapacity(Integer boxcapacity) {
+		this.boxcapacity = boxcapacity;
 	}
 
 	@Override
@@ -149,8 +155,10 @@ public class QCProductPlan implements Serializable{
 				+ ", orderNumber=" + orderNumber + ", finishNumber="
 				+ finishNumber + ", preProductDate=" + preProductDate
 				+ ", preShipmentDate=" + preShipmentDate + ", productStatus="
-				+ productStatus + ", productId=" + productId + ", packbarcode="
-				+ packbarcode + ", boxbarcode=" + boxbarcode + "]";
-	}	
-    
+				+ productStatus + ", lastUpUser=" + lastUpUser + ", productId="
+				+ productId + ", packbarcode=" + packbarcode + ", boxbarcode="
+				+ boxbarcode + ", boxcapacity=" + boxcapacity + "]";
+	}
+
+	
 }

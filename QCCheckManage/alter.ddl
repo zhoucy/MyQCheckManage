@@ -291,4 +291,6 @@ drop table report_temp
   Alter table qc_plan_production add  boxbarcode   nvarchar(200)    --添加箱子条形码 --zhoucy 2016-08-01
    Alter table qc_product_record  alter  column  material_code nvarchar(200)--修改物料编码  长度--zhoucy 2016-09-06
    Alter table qc_plan_production  add  column  lastUpUser nvarchar(200)--添加更新用户名--zhoucy 2016-09-13
- 
+ --zhoucy qc_worktime  添加第十二个小时
+ ALTER TABLE qc_worktime ADD E12 int default 81000
+ ALTER TABLE qc_worktime ADD S12 int default 77400

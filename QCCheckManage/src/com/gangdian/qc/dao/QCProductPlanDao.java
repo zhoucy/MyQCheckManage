@@ -37,4 +37,10 @@ public interface QCProductPlanDao {
     int updateQCPPStatus(@Param("productStatus") String productStatus,
     					 @Param("id") int id,
     					 @Param("lastUpUser") String lastUpUser);
+    
+    
+    //finishÊý+1
+    int FinishNumberIncrease(@Param("pono") String pono);
+    //finishÊý-1
+    int FinishNumberDecrease(@Param("pono") String pono);
 }

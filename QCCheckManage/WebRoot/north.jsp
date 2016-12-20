@@ -51,6 +51,7 @@
   <div style="display:none">
 		<div id="brower-toolbar">
 		    <a class="easyui-linkbutton" iconcls="icon-myproductmanger" plain="true" style="width:120px;text-align:left;" href="${pageContext.request.contextPath}/indexjsp/MyJsp2.jsp">生产开单</a><br>
+		    <a class="easyui-linkbutton" iconcls="icon-myproductmanger" plain="true" style="width:120px;text-align:left;" href="${pageContext.request.contextPath}/indexjsp/packing.jsp">包装(packing)</a><br>
 		    <a class="easyui-linkbutton" iconcls="icon-undo" plain="true" style="width:120px;text-align:left;" href="${pageContext.request.contextPath}/qc/QCCheck.jsp">品质检测记录</a><br>
 		    <a class="easyui-linkbutton" iconcls="icon-mylookboard2" plain="true" style="width:120px;text-align:left;" href="${pageContext.request.contextPath}/board/QCBoard.jsp">生产日报看板</a><br>
 			<a class="easyui-linkbutton" iconcls="icon-mylookboard" plain="true" style="width:120px;text-align:left;" href="${pageContext.request.contextPath}/board/QCProductionBoard.jsp">产能看板</a><br>
@@ -64,6 +65,7 @@
 		    <a class="easyui-linkbutton" iconcls="icon-mybluepling" plain="true" href="javascript:void(0)" onclick="showwinit()">技术支持</a><br>
 		    <a class="easyui-linkbutton" iconcls="icon-myyellowpling" plain="true" href="javascript:void(0)" onclick="showwarning()">注意事项</a><br>
 		    <a class="easyui-linkbutton" iconcls="icon-help" plain="true" href="javascript:void(0)" onclick="helpdocument();">帮组文档</a><br>
+		    <a class="easyui-linkbutton" iconcls="icon-mytheme" plain="true" href="javascript:void(0)" onclick="themeset();">主题设置</a><br>
 		    <!-- <a class="easyui-linkbutton" iconcls="icon-myonlinehelp" plain="true" href="javascript:void(0)" onclick="helponline();">在线求组</a><br>    --> 
 		</div>
   </div>
@@ -144,8 +146,29 @@
                 <td>excel</td>
                 <td>2016-08-25</td>
                 <td><a href="${pageContext.request.contextPath}/helpdocument/文具申请清单表.xls">下载</a></td>
-           </tr></tbody>
+           </tr>
+           <tr>
+                <td>4</td>
+                <td>PC</td>
+                <td>world</td>
+                <td>2016-11-24</td>
+                <td><a href="${pageContext.request.contextPath}/helpdocument/pc.docx">下载</a></td>
+           </tr>
+           </tbody>
         </table>
+</div>
+<div id="win-theme" class="easyui-window" title="选择主题" style="width:50%;height:50%;padding:25px"   
+        data-options="collapsible:false,minimizable:false,maximizable:false,modal:true,closed:true">   
+        <label>请选择主题:</label><select id="timetype" class="easyui-combobox" style="width:30%;"
+                        data-options="onSelect:themeselect,panelHeight:'auto'" >
+                        <option value="default">默认主题</option> 
+                        <option value="gray">gray</option>                                             
+                        <option value="bootstrap">bootstrap</option>
+                        <option value="ui-cupertino">ui-cupertino</option>
+                        <option value="ui-dark-hive">ui-dark-hive</option>
+                        <option value="ui-pepper-grinder">ui-pepper-grinder</option>
+                        <option value="ui-sunny">ui-sunny</option>
+                        </select>
 </div>
 <div id="win-helponline" class="easyui-window" title="在线求组" style="width:700px;height:400px;padding:10px;"   
         data-options="collapsible:false,minimizable:false,maximizable:false,modal:true,closed:true">   
@@ -170,6 +193,27 @@
      function helponline(){
           $("#win-helponline").window('open');
           //successMsg("施工中......");
+     }
+     function themeset(){
+          $("#win-theme").window('open');
+     }
+     function themeselect(){
+         var val=$(this).combobox("getValue");
+         var $easyuiTheme=$("#easyuiTheme");
+         var url=$easyuiTheme.attr('href');
+         var href=url.substring(0,url.indexOf('themes'))+'themes/'+val+'/easyui.css';
+         $easyuiTheme.attr('href',href);
+         /*如果使用了iframe则要添加下面那这段代码,否则的话iframe中的内容部会出现样式的改变 */
+         var $iframe=$('iframe');
+         if($iframe.length>0){
+             for(var i=0;i<$iframe.length;i++){
+                var ifr = $iframe[i];
+                $(ifr).contents().find('#easyuiTheme').attr('href', href);
+             }
+         } 
+         $.cookie('easyuiThemeName',val,{
+            expires:7
+         });
      }
      function successMsg(msg){
             $.messager.alert('消息',msg,'info');                                  

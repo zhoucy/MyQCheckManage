@@ -1,6 +1,7 @@
 package com.gangdian.qc.dao;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
@@ -21,6 +22,6 @@ public interface QCCheckProjectDao {
 	public  List<QCCheckProject>  queryPageProject(@Param("id")String id,@Param("name")String name,@Param("startIndex")int startIndex, @Param("pageSize")int pageSize);
 	public  int getProjectCount(QCCheckProject record);
 	
-	
+	List<Map<String, Object>> getAllProjectIdAndName();
 
 }

@@ -18,9 +18,7 @@
 						<div class="padding-top-10"></div>
 						 <label class="label-1 left">产品类型：</label> 
 						 <select name="prodectType" id="prodectType"  class="input-1p Wdate left width150">
-							<option value="S">直发器</option>
-							<option value="C">卷发器</option>
-							<option value="D">定型器</option>
+							<option value="P">良品</option>
 						 </select>
 						 <div class="blank20"></div>
 						<label class="label-1 left">导出类型：</label>

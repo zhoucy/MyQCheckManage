@@ -113,7 +113,7 @@
   	select  a.QCCheckProjectID,
  isNull(one,0) one,isNull(two,0) two,isnull(three,0)three,
  isNull(four,0) four,isNull(five,0) five,isNull(six,0) six,isNull(seven,0) seven,
- isNull(eight,0) eight,isNull(nine,0) nine,isNull(ten,0) ten,isNull(eleven,0)  eleven , isNull(allNum,0) allNum from  QCCheckProjectTemp a left join( 
+ isNull(eight,0) eight,isNull(nine,0) nine,isNull(ten,0) ten,isNull(eleven,0)  eleven ,isNull(h12,0)  h12 ,isNull(allNum,0) allNum from  QCCheckProjectTemp a left join( 
 	select  case when  QCCheckProjectID='P01' then '良品'  else  '不良品' end qcid , 
 	  sum(case when DATEDIFF(ss,pm.productDate,cr.insertDate) between s1 and e1 then 1 else 0 end) as one,
 	  sum(case when DATEDIFF(ss,pm.productDate,cr.insertDate) between s2 and e2 then 1 else 0 end) as two,
@@ -126,6 +126,7 @@
 	  sum(case when DATEDIFF(ss,pm.productDate,cr.insertDate) between s9 and e9 then 1 else 0 end) as nine,
 	  sum(case when DATEDIFF(ss,pm.productDate,cr.insertDate) between s10 and e10 then 1 else 0 end) as ten,
 	  sum(case when DATEDIFF(ss,pm.productDate,cr.insertDate) between s11 and e11 then 1 else 0 end) as eleven,
+	  sum(case when DATEDIFF(ss,pm.productDate,cr.insertDate) between s12 and e12 then 1 else 0 end) as h12,
 	   COUNT(*) allNum
 	   from   QCCheckRecord cr  inner join product_main pm on pm.id=parent_id
 	   left join qc_worktime wt on pm.groupid=wt.groupid 

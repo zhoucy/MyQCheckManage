@@ -154,6 +154,10 @@ public class ProductMainServiceImpl implements ProductMainService{
 		return mainDao.getTodayPMByGroupid(groupid);
 	}
 
+	public List<Map<String, Object>> getTodayPMByGroupidFromPlan(Integer groupid,String productDate) {
+		return mainDao.getTodayPMByGroupidFromPlan(groupid,productDate);
+	}
+	
 	public Map<String, Object> lockProducingQCPM(Integer groupid) {
 		Map<String, Object> result=new HashMap<String, Object>();
 		List<Map<String, Object>> list=mainDao.lockProducingQCPM(groupid);
@@ -165,6 +169,13 @@ public class ProductMainServiceImpl implements ProductMainService{
 		}
 		return result;
 	}
+
+	public List<Map<String, Object>> getPMByGroupidAndProductDate(
+			Integer groupid, String productDate) {
+		return mainDao.getPMByGroupidAndProductDate(groupid, productDate);
+	}
+
+	
 
 
 

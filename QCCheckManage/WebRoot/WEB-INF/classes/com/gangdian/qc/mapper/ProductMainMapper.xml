@@ -431,7 +431,7 @@
     group by  a.pono,c.order_number
 
   </select>
- 
+<!-- 刷卡计数记录序列号数来计算订单完成数-->
 <select id="getTodayPMByGroupid" resultType="java.util.HashMap">
 select pm.id,pm.pono,dept.name,pt.product_name,pm.model oldmodel,pr.model newmodel,
 qp.progress_name,pm.sumWorker,pm.targetProduct,pm.standardProduct,
@@ -446,6 +446,26 @@ where productDate=convert(varchar(10),getdate(),120)
 and groupid=#{groupid,jdbcType=INTEGER}
 </select>
 
+<!-- 根据生产计划的订单finish_number来取完成数 -->
+<select id="getTodayPMByGroupidFromPlan" resultType="java.util.HashMap">
+select pm.id,pm.pono,dept.name,pt.product_name,pm.model oldmodel,pr.model newmodel,
+qp.progress_name,pm.sumWorker,pm.targetProduct,pm.standardProduct,
+pm.productTime,pm.endTime,pm.productDate,pp.order_number,
+case when pp.finish_number is null then 0 else pp.finish_number end as finish_number,0 temp
+from product_main pm left join department dept on dept.id=pm.groupid
+left join qc_product_type pt on pt.product_no=pm.prodectType
+left join qc_progress qp on qp.progress_code=pm.progress
+left join qc_product_record pr on pr.id=pm.productid
+left join qc_plan_production pp on pp.pono=pm.pono
+where 1=1
+<if test="productDate == null">and productDate=convert(varchar(10),getdate(),120) </if>
+<if test="productDate != null">and productDate=#{productDate,jdbcType=NVARCHAR} </if>  
+and groupid=#{groupid,jdbcType=INTEGER}
+</select>
+
+
+
+
 <select id="lockProducingQCPM" resultType="java.util.HashMap">
   select top 1 pm.pono pono,pm.id pmid,pp.id planid,pm.model,pm.prodectType
   ,pm.sumWorker,pm.targetProduct,pm.standardProduct
@@ -453,5 +473,12 @@ and groupid=#{groupid,jdbcType=INTEGER}
   where productDate=convert(varchar(10),getdate(),120) and endTime is null 
   and groupid=#{groupid,jdbcType=INTEGER}
   order by productTime desc
+</select>
+
+
+<select id="getPMByGroupidAndProductDate" resultType="java.util.HashMap">
+select * from product_main where 1=1
+<if test="groupid != null">and groupid=#{groupid,jdbcType=INTEGER}</if>
+<if test="productDate != null and productDate != ''">and productDate=#{productDate,jdbcType=NVARCHAR}</if>   
 </select>
 </mapper>

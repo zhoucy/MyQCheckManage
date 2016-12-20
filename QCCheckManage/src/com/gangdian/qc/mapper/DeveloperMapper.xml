@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gangdian.qc.dao.DeveloperDao" >
+
+
+<select id="getDataByDataType" resultType="java.util.HashMap">
+
+select * from(
+select ROW_NUMBER() over (order by 
+<if test="sort != null and sort != '' and order != null and order != ''">${sort} ${order},</if> 
+name) as RowNum, name,create_date,modify_date,type from 
+<if test="dataType!=null and dataType!=''">${dataType}</if>
+<if test="dataType==null or dataType==''.toString()">sys.tables</if>
+) as temp
+<if test="rows != null and page != null">
+where RowNum between (#{page,jdbcType=INTEGER}-1)*#{rows,jdbcType=INTEGER}+1 and #{page,jdbcType=INTEGER}*#{rows,jdbcType=INTEGER}
+</if>
+</select>
+
+
+<select id="getDataDetails" resultType="java.util.HashMap">
+<if test="dataName!=null and dataName!=''">
+;with cte as
+(select top 1 name from syscolumns where id=object_id(#{dataName,jdbcType=NVARCHAR}))
+select * from (
+select ROW_NUMBER() over (order by (select * from cte) ) as RowNum,* from ${dataName}
+)as temp
+<if test="rows != null and page != null">
+where RowNum between (#{page,jdbcType=INTEGER}-1)*#{rows,jdbcType=INTEGER}+1 and #{page,jdbcType=INTEGER}*#{rows,jdbcType=INTEGER}
+</if>
+</if>
+</select>
+<select id="getDataDetailsCount" resultType="int">
+select count(*) from ${dataName}
+</select>
+<select id="getColumnsByDataName" resultType="java.util.HashMap">
+select name from syscolumns where id=object_id(#{dataName,jdbcType=NVARCHAR})
+</select>
+
+
+<select id="getDataBySql" resultType="java.util.HashMap">
+<if test="sqlStr!=null and sqlStr!=''">
+select top
+<if test="number!=null">#{number,jdbcType=INTEGER}</if>
+<if test="number==null">50</if>
+* from(
+${sqlStr}
+)as temp
+</if>
+</select>
+</mapper>

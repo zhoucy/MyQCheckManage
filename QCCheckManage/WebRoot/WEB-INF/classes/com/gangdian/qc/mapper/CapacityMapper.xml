@@ -133,9 +133,41 @@ where productDate between #{startday,jdbcType=NVARCHAR} and #{endday,jdbcType=NV
 <if test="timetype=='quarter' or timetype=='year'">group by DATEPART(MONTH,productDate) order by DATEPART(MONTH,productDate)</if>
 </select>
   
-  
-  
-  
+<select id="getProductPerHourHighCharts" resultType="java.util.HashMap">
+select convert(char(10),insertDate,120) as Date,
+<!--   sum(case when DATEPART(hour,insertDate)=0 then 1 else 0 end) h00,
+  sum(case when DATEPART(hour,insertDate)=1 then 1 else 0 end) h01,
+  sum(case when DATEPART(hour,insertDate)=2 then 1 else 0 end) h02,
+  sum(case when DATEPART(hour,insertDate)=3 then 1 else 0 end) h03,
+  sum(case when DATEPART(hour,insertDate)=4 then 1 else 0 end) h04,
+  sum(case when DATEPART(hour,insertDate)=5 then 1 else 0 end) h05,
+  sum(case when DATEPART(hour,insertDate)=6 then 1 else 0 end) h06, -->
+  sum(case when DATEPART(hour,insertDate)=7 then 1 else 0 end) h07,
+  sum(case when DATEPART(hour,insertDate)=8 then 1 else 0 end) h08, 
+  sum(case when DATEPART(hour,insertDate)=9 then 1 else 0 end) h09,
+  sum(case when DATEPART(hour,insertDate)=10 then 1 else 0 end) h10,
+  sum(case when DATEPART(hour,insertDate)=11 then 1 else 0 end) h11,
+  sum(case when DATEPART(hour,insertDate)=12 then 1 else 0 end) h12,
+  sum(case when DATEPART(hour,insertDate)=13 then 1 else 0 end) h13,
+  sum(case when DATEPART(hour,insertDate)=14 then 1 else 0 end) h14,
+  sum(case when DATEPART(hour,insertDate)=15 then 1 else 0 end) h15,
+  sum(case when DATEPART(hour,insertDate)=16 then 1 else 0 end) h16,
+  sum(case when DATEPART(hour,insertDate)=17 then 1 else 0 end) h17,
+  sum(case when DATEPART(hour,insertDate)=18 then 1 else 0 end) h18,
+  sum(case when DATEPART(hour,insertDate)=19 then 1 else 0 end) h19,
+  sum(case when DATEPART(hour,insertDate)=20 then 1 else 0 end) h20,
+  sum(case when DATEPART(hour,insertDate)=21 then 1 else 0 end) h21,
+  sum(case when DATEPART(hour,insertDate)=22 then 1 else 0 end) h22,
+  sum(case when DATEPART(hour,insertDate)=23 then 1 else 0 end) h23,
+  COUNT(*) as total
+  from QCCheckRecord cr left join product_main pm on cr.parent_id=pm.id
+  where insertDate between #{startday,jdbcType=NVARCHAR} and #{endday,jdbcType=NVARCHAR}
+  and cr.QCCheckProjectID='P01'
+  <if test="groupid!=null">and groupid=#{groupid,jdbcType=INTEGER}</if>
+  group by convert(char(10),insertDate,120)
+  order by convert(char(10),insertDate,120) desc
+</select>
+    
   
 <select id="getCapaCityDetailByHour" resultType="java.util.HashMap">
        select           
@@ -335,11 +367,13 @@ case when ttotal=0 then 0 else 10000*btotal/ttotal end as total
 <select id="getTodayOrderOfIndex" resultType="java.util.HashMap">
   select pp.pono,dept.name, pt.product_name,pp.pre_shipment_date,pp.order_number,
   case when pp.finish_number is null then 0 else pp.finish_number end as finish_number,0 as temp,
-  pp.product_status
+  pp.product_status,pp.product_specific,pp.model
   from product_main pm left join qc_plan_production pp on pm.pono=pp.pono
   left join qc_product_type pt on pm.prodectType=pt.product_no
   left join department dept on pm.groupid=dept.id
-  where productDate=convert(varchar(10),getdate(),120)
+  where 1=1
+  <if test="productDate == null">and productDate=convert(varchar(10),getdate(),120)</if>
+  <if test="productDate != null">and productDate=#{productDate,jdbcType=NVARCHAR}</if> 
   order by pp.pre_shipment_date
 </select>
 <select id="getTodayCapacityOfIndex" resultType="java.util.HashMap">

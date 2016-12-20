@@ -87,7 +87,7 @@ public class PrintLable {
 
      		TscLibDll.INSTANCE.sendcommand(strP);
      		
-     		TscLibDll.INSTANCE.printlabel("1", "2"); 
+     		TscLibDll.INSTANCE.printlabel("1", "6"); 
      		TscLibDll.INSTANCE.clearbuffer();
             TscLibDll.INSTANCE.closeport();
 			return "success";
@@ -100,6 +100,7 @@ public class PrintLable {
     		PrintService ps = PrintServiceLookup.lookupDefaultPrintService();
     		System.out.println(ps.getName());
 			PrintLable.printQR("2016-10-190103","9025");
+			PrintLable.printQR("abc",ps.getName());
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -32,6 +32,9 @@ public interface CapacityDao {
 	List<Map<String, Object>> getProductTypeHighCharts(@Param("startday") String startday
 			,@Param("endday") String endday,@Param("producttype") String producttype,
 			@Param("groupid") Integer groupid,@Param("belong") Integer belong,@Param("timetype") String timetype);
+	//highcharts产品每小时折线图
+	List<Map<String, Object>> getProductPerHourHighCharts(@Param("startday") String startday,@Param("endday") String endday,
+			                  @Param("groupid") Integer groupid);
 	
 	
 	
@@ -53,7 +56,7 @@ public interface CapacityDao {
 	
 	
 	//首页获取当天的正在生产的订单信息
-	List<Map<String, Object>> getTodayOrderOfIndex();
+	List<Map<String, Object>> getTodayOrderOfIndex(@Param("productDate") String productDate);
 	//首页获取当天每个小时总产能线图的信息
 	List<Map<String, Object>> getTodayCapacityOfIndex(@Param("startday") String startday,@Param("endday") String endday);
 	//首页获取当天产品类型饼图信息

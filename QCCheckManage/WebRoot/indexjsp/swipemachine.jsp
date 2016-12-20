@@ -99,7 +99,7 @@
                                                             url: '${ctx}/qc/getPonoAndUnion.do',
                                                             panelHeight:'auto'"/></td>
 	            <td>生产组别:</td><td><input id="groupid" name="groupid" class="easyui-combobox" style="width:120px;"
-                                              data-options="valueField: 'mgid',    
+                                              data-options="valueField: 'mgroupid',    
                                                             textField: 'mgroupname',    
                                                             url: '${ctx}/qc/getBindPono.do',
                                                             panelHeight:'auto', 

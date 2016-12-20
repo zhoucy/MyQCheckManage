@@ -76,7 +76,7 @@ $(document).ready(function() {
 	    				    var td11=$("<td>"+targetrate.toFixed(0)+"%</td>");
 	    					
 	    					
-	    					tr.append(td1).append(td2).append(td10).append(td3).append(td8).append(td9).append(td4).append(td5).
+	    					tr.append(td4).append(td1).append(td2).append(td10).append(td3).append(td8).append(td9).append(td5).
 	    					append(td6).append(td7).append(td11);
 	    					tr.appendTo(record);  
 	    				
@@ -123,13 +123,13 @@ $(document).ready(function() {
             	<table class="reporttable">
             		<thead>
 						<tr height="40px">
+						    <th width="8%" >组别</th>
 							<th width="10%" >订单号</th>
 						    <th width="8%" >产品型号</th>
 						    <th width="9%" >预计出货日期</th>
 						    <th width="8%" >订单数量</th>
 						    <th width="9%" >订单累计产量</th>
-						    <th width="8%" >订单欠数</th>
-						    <th width="8%" >组别</th>
+						    <th width="8%" >订单欠数</th>				    
 						    <th width="9%" >当前产线产量</th>
 						    <th width="8%" >目标工时</th>
 						    <th width="8%" >实际工时</th>

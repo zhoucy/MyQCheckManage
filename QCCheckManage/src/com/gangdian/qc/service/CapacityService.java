@@ -26,7 +26,8 @@ public interface CapacityService {
 	//产品类型统计图highcharts
 	public Map<String, Object> getProductTypeHighCharts(String date,String timetype
 			,String producttype,Integer groupid,Integer belong) throws ParseException;
-	
+	//没小时产能统计图highcharts
+	public Map<String, Object> getProductPerHourHighCharts(String date,Integer groupid,Integer n)  throws ParseException;
 	
 	
 	//产能统计(按时间)的替代方法
@@ -39,7 +40,7 @@ public interface CapacityService {
 	
 	
 	//首页获取当天的正在生产的订单信息
-	public List<Map<String, Object>> getTodayOrderOfIndex();
+	public List<Map<String, Object>> getTodayOrderOfIndex(String productDate);
 	//首页获取当天每个小时总产能的信息
 	public Map<String, Object> getTodayCapacityOfIndex(String compareDay);
 	//首页获取当天产品类型饼图信息

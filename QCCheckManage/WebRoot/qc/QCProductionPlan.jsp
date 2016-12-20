@@ -26,6 +26,7 @@
 				<th field="preShipmentDate" width="50" sortable="true">预计出货日期</th>
 				<th field="packbarcode" width="50" sortable="true">彩盒条形码</th>
 				<th field="boxbarcode" width="50" sortable="true">箱子条形码</th>
+				<th field="boxcapacity" width="50" sortable="true">个/箱</th>
 				<th field="productStatus" width="50" sortable="true" formatter="formatStatus">状态</th>
 				<th field="lastUpUser" width="50" sortable="true">最后操作人</th>
 			</tr>
@@ -37,8 +38,8 @@
 	              <td>生产单号:</td><td><input type="text" id="pono" class="easyui-textbox" style="width:100px"/></td>
 	              <td>计划生产日期:</td><td><input class="easyui-datebox" id="preProductDate"  style="width:104px"/></td>
 	              <td>预计出货日期:</td><td><input class="easyui-datebox" id="preShipmentDate"  style="width:104px"/></td>
-	              <td>彩盒条形码:</td><td><input type="text" id="packbarcode"  style="width:100px" class="easyui-textbox" /></td>
-	              <td>箱子条形码:</td><td><input type="text" id="boxbarcode"  style="width:100px" class="easyui-textbox" /></td>
+	              <td>彩盒条形码:</td><td><input type="text" id="packbarcode"  style="width:100px" class="easyui-numberbox" /></td>
+	              <td>箱子条形码:</td><td><input type="text" id="boxbarcode"  style="width:100px" class="easyui-numberbox" /></td>
                   <td><a href="javascript:searchQCPP()" class="easyui-linkbutton" data-options="iconCls:'icon-search'">查询</a></td>
 	              <td><a href="javascript:clearQCPP()" class="easyui-linkbutton" data-options="iconCls:'icon-myclear'">清空</a></td>
 	         </tr>	
@@ -64,7 +65,7 @@
 		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="reload()">刷新</a>
 	</div>
 	
-	<div id="dlg" class="easyui-dialog" style="width:400px;height:360px;padding:10px 20px"
+	<div id="dlg" class="easyui-dialog" style="width:400px;height:400px;padding:10px 20px"
 			closed="true" buttons="#dlg-buttons">
 		<div class="ftitle">生产计划信息</div>
 		<form id="fm" method="post" novalidate>
@@ -101,11 +102,15 @@
 			</div>
 			<div class="fitem">
 				<label>彩盒条形码:</label>
-				<input name="packbarcode" class="easyui-textbox" >
+				<input name="packbarcode" class="easyui-numberbox" >
 			</div>
 			<div class="fitem">
 				<label>箱子条形码:</label>
-				<input name="boxbarcode" class="easyui-textbox" >
+				<input name="boxbarcode" class="easyui-numberbox" >
+			</div>
+			<div class="fitem">
+				<label>个/箱:</label>
+				<input name="boxcapacity" class="easyui-numberbox" >
 			</div>
 			<div class="fitem" hidden="true">
 				<label>产品id隐藏起来:</label>
@@ -233,21 +238,23 @@
 		        productStatus:$("#productStatus").val(),
 		        packbarcode:$("#packbarcode").val(),
 		        boxbarcode:$("#boxbarcode").val(),
+		        boxcapacity:$("#boxcapacity").val()
 		    });
 		}
 		//清空查询条件,将查询组件赋值为空就行了
 		function clearQCPP(){
 		    console.log("测试清空");
-		    $("#pono").val("");
-		    $("#model").val("");
-		    $("#productSpecific").val("");
+		    $("#pono").textbox('clear');
+		    $("#model").textbox('clear');
+		    $("#productSpecific").textbox('clear');
 		    $("#orderNumber").numberbox('clear');
 		    $("#finishNumber").numberbox('clear');
 		    $("#preProductDate").combo('clear'),
 		    $("#preShipmentDate").combo('clear'),
 		    $("#productStatus").val("");
-		    $("#packbarcode").val("");
-		    $("#boxbarcode").val("");
+		    $("#packbarcode").numberbox('clear');
+		    $("#boxbarcode").numberbox('clear');
+		    $("#boxcapacity").val("");
 		}
 		//刷新
 		function reload(){

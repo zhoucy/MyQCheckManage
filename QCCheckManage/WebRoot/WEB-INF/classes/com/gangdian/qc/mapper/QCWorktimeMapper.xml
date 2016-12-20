@@ -27,10 +27,12 @@
     <result column="E9" property="e9" jdbcType="INTEGER" />
     <result column="E10" property="e10" jdbcType="INTEGER" />
     <result column="E11" property="e11" jdbcType="INTEGER" />
+    <result column="S12" property="s12" jdbcType="INTEGER" />
+    <result column="E12" property="e12" jdbcType="INTEGER" />
   </resultMap>
   <sql id="Base_Column_List" >
     id, groupid, belongid, S1, S2, S3, S4, S5, S6, S7, S8, S9, S10, S11, E1, E2, E3, 
-    E4, E5, E6, E7, E8, E9, E10, E11
+    E4, E5, E6, E7, E8, E9, E10, E11,S12, E12
   </sql>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
     select 
@@ -49,14 +51,14 @@
       S9, S10, S11, E1, 
       E2, E3, E4, E5, 
       E6, E7, E8, E9, 
-      E10, E11)
+      E10, E11,S12,E12)
     values (#{id,jdbcType=INTEGER}, #{groupid,jdbcType=INTEGER}, #{belongid,jdbcType=INTEGER}, 
       #{s1,jdbcType=INTEGER}, #{s2,jdbcType=INTEGER}, #{s3,jdbcType=INTEGER}, #{s4,jdbcType=INTEGER}, 
       #{s5,jdbcType=INTEGER}, #{s6,jdbcType=INTEGER}, #{s7,jdbcType=INTEGER}, #{s8,jdbcType=INTEGER}, 
       #{s9,jdbcType=INTEGER}, #{s10,jdbcType=INTEGER}, #{s11,jdbcType=INTEGER}, #{e1,jdbcType=INTEGER}, 
       #{e2,jdbcType=INTEGER}, #{e3,jdbcType=INTEGER}, #{e4,jdbcType=INTEGER}, #{e5,jdbcType=INTEGER}, 
       #{e6,jdbcType=INTEGER}, #{e7,jdbcType=INTEGER}, #{e8,jdbcType=INTEGER}, #{e9,jdbcType=INTEGER}, 
-      #{e10,jdbcType=INTEGER}, #{e11,jdbcType=INTEGER})
+      #{e10,jdbcType=INTEGER}, #{e11,jdbcType=INTEGER}, #{s12,jdbcType=INTEGER}, #{e12,jdbcType=INTEGER})
   </insert>
   <insert id="insertSelective" parameterType="com.gangdian.qc.model.QCWorktime" >
     insert into qc_worktime
@@ -136,6 +138,12 @@
       <if test="e11 != null" >
         E11,
       </if>
+       <if test="e10 != null" >
+        S12,
+      </if>
+      <if test="e11 != null" >
+        E12,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -212,6 +220,12 @@
       </if>
       <if test="e11 != null" >
         #{e11,jdbcType=INTEGER},
+      </if>
+      <if test="e10 != null" >
+        #{s12,jdbcType=INTEGER},
+      </if>
+      <if test="e11 != null" >
+        #{e12,jdbcType=INTEGER},
       </if>
     </trim>
   </insert>
@@ -290,6 +304,12 @@
       <if test="e11 != null" >
         E11 = #{e11,jdbcType=INTEGER},
       </if>
+      <if test="s12 != null" >
+        S12 = #{s12,jdbcType=INTEGER},
+      </if>
+      <if test="e12 != null" >
+        E12 = #{e12,jdbcType=INTEGER},
+      </if>
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
@@ -318,7 +338,9 @@
       E8 = #{e8,jdbcType=INTEGER},
       E9 = #{e9,jdbcType=INTEGER},
       E10 = #{e10,jdbcType=INTEGER},
-      E11 = #{e11,jdbcType=INTEGER}
+      E11 = #{e11,jdbcType=INTEGER},
+      S12 = #{s12,jdbcType=INTEGER},
+      E12 = #{e12,jdbcType=INTEGER}
     where id = #{id,jdbcType=INTEGER}
   </update>
   

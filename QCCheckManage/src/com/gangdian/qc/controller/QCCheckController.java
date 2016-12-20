@@ -271,4 +271,12 @@ public class QCCheckController {
 		
 	}
 	
+	
+	@RequestMapping("getAllProjectIdAndName.do")
+	@ResponseBody
+	public List<Map<String, Object>> getAllProjectIdAndName(){
+		return checkProjectService.getAllProjectIdAndName();
+	}
+	
+	
 }

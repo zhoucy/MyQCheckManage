@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.gangdian.qc.dao.PackingDao" >
+  
+
+<select id="getBarCodeByPmid" resultType="java.util.HashMap">
+select * from (
+select ROW_NUMBER() over (order by 
+<if test="sort != null and sort != '' and order != null and order != ''">${sort} ${order},</if> 
+time desc) as RowNum, * from  packing
+where 1=1
+<if test="pmid != null"> and pmid=#{pmid,jdbcType=INTEGER}</if>
+<if test="barcode != null and barcode != ''"> and PackBarcode=#{barcode,jdbcType=NVARCHAR}</if>
+<if test="date != null and date != ''"> and date=#{date,jdbcType=NVARCHAR}</if>
+)as temp
+<if test="rows != null and page != null">
+where RowNum between (#{page,jdbcType=INTEGER}-1)*#{rows,jdbcType=INTEGER}+1 and #{page,jdbcType=INTEGER}*#{rows,jdbcType=INTEGER}
+</if>
+</select>
+<select id="addPacking"  statementType="CALLABLE">
+{call proc_addpack(
+  #{pmid,mode=IN,jdbcType=INTEGER},
+  #{PackBarcode,mode=IN,jdbcType=BIGINT},
+  #{BoxBarcode,mode=IN,jdbcType=BIGINT},
+  #{result,mode=OUT,jdbcType=INTEGER}
+  )}
+</select>
+<select id="addPackingMap"  statementType="CALLABLE" parameterType="java.util.HashMap">
+{call proc_addpack(
+  #{pmid,mode=IN,jdbcType=INTEGER},
+  #{BoxBarcode,mode=IN,jdbcType=BIGINT},
+  #{PackBarcode,mode=IN,jdbcType=BIGINT},
+  #{result,mode=OUT,jdbcType=INTEGER}
+  )}
+</select>
+<!-- 未完成 -->
+<delete id="delPacking">
+delete packing where PackBarcode=#{barcode,jdbcType=NVARCHAR} 
+and pmid=#{pmid,jdbcType=INTEGER} 
+and date=#{date,jdbcType=NVARCHAR} 
+and time=#{time,jdbcType=NVARCHAR}
+</delete>
+<select id="getPonoAndPackingByPmid" resultType="java.util.HashMap">
+select pp.pono,pp.packbarcode,pp.boxbarcode,pp.boxcapacity
+from product_main pm left join qc_plan_production pp on pm.pono=pp.pono where pm.id=#{pmid,jdbcType=INTEGER}
+</select>
+</mapper>

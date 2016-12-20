@@ -35,16 +35,20 @@
                                                             url: '${ctx}/qc/getAllDept.do',
                                                             panelHeight:'auto', 
                                                             value:'${sessionScope.groupid}', 
-                                                            readonly:true,
                                                             onSelect:loadinfo
                                                             " /></td>
-                
+                 <td>项目编码:</td><td><input id="qcid" name="qcid"  class="easyui-combobox" style="width:150px;"
+                                              required="true" missingMessage="必填信息"
+                                              data-options="valueField: 'id',    
+                                                            textField: 'name',    
+                                                            url: '${ctx}/qc/getAllProjectIdAndName.do',
+                                                            panelHeight:'auto', 
+                                                            value:'P01'"
+                                               /></td>
                  <td>订单批号:</td><td><input id="serialnum" name="serialnum"  class="easyui-textbox" style="width:150px;"
                                              required="true" missingMessage="必填信息"
                                                /></td>
-                 <td>项目编码:</td><td><input id="qcid" name="qcid"  class="easyui-textbox" style="width:150px;"
-                                              required="true" missingMessage="必填信息"
-                                               /></td>
+                 
                  <td><a id="productstart" href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-ok'" onclick="productCheck();">确定</a></td>
                  <td><a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-reload'" onclick="reflashData();">刷新数据</a></td>
                </tr> 
@@ -145,7 +149,7 @@ $(document).ready(function() {
     
     function clearSerialNum(){
         
-        $("#qcid").textbox("clear");
+        //$("#qcid").textbox("clear");
         $("#serialnum").textbox("clear");
         $("#serialnum").textbox('textbox').focus();
     }

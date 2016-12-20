@@ -57,8 +57,30 @@ public class QCWorktime implements Serializable{
     private Integer e10;
 
     private Integer e11;
+    
+    private Integer S12;
+    
+    private Integer E12;
+    
+    
 
-    public Integer getId() {
+    public Integer getS12() {
+		return S12;
+	}
+
+	public void setS12(Integer s12) {
+		S12 = s12;
+	}
+
+	public Integer getE12() {
+		return E12;
+	}
+
+	public void setE12(Integer e12) {
+		E12 = e12;
+	}
+
+	public Integer getId() {
         return id;
     }
 

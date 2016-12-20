@@ -370,6 +370,6 @@ function clearhighchart(){
             <td><a class="easyui-linkbutton"   onclick="getExcel();">导出数据到excel</a></td>
        </tr>
     </table>   
-  <div id="container" style="min-width:800px;height:580px;"></div> 
+  <div id="container" style="min-width:100%;height:90%;"></div> 
   </div>
 </body>

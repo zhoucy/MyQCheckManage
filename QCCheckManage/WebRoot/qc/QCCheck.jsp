@@ -499,10 +499,10 @@
 						</select> <span></span> <label class="label-1 left">生产工序：</label> <select
 							name="progress" id="progress"
 							class="input-1p Wdate left width150">
-							<option value=""></option>
+							<option value="2">组装</option>
 							<option value="4">组装+包装</option>
 							<option value="1">包装</option>
-							<option value="2">组装</option>
+							
 							<option value="5">大小卷筒加工</option>
 							<option value="6">底座加工+包装</option>
 							<option value="7">卷发头加工</option>

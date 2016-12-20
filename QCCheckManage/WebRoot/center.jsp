@@ -12,28 +12,36 @@
   
   <body>
       <div id="tabs" class="easyui-tabs" data-options="tools:'#tab-tools'" fit="true"
-                pill="false"  plain="true" narrow="true" style="background:#E0ECFF;">  
+                pill="false"  plain="true" narrow="true">  
   
           <div title="首页" style="padding: 0; overflow: hidden;" id="home" data-options="iconCls:'icon-myhome'"> 
              <table>
                   <tr>
-                      <td><div id="home-panel-welcome" title="" class="easyui-panel"  data-options="cls:'c0'" 
-                               style="width:450px;height:310px;">
-                                <div class="easyui-calendar" fit="true" border="false" firstDay="1"></div>
-                               </div>                             
+                      <td><div id="home-panel-welcome" title="" class="easyui-panel"  data-options="cls:'c0'" >
+                                <div class="easyui-calendar" fit="true" border="false" firstDay="1" 
+                                     data-options="onSelect: function(date){
+                                                    var productDate=getDateStr(date);
+		                                            $('#todayorder').datagrid({
+		                                                    title:productDate+'的订单',
+		                                                    queryParams:{productDate:productDate}		                                                    
+		                                                  });
+	                                              }"></div>
+                               </div>               
                           </td>
-                      <td><table id="todayorder" class="easyui-datagrid" style="width:970px;height:310px" rownumbers="true" fit="true" title="今天生产中的订单"
+                      <td><table id="todayorder" class="easyui-datagrid"  rownumbers="true" fit="true" title="今天生产中的订单"
 		                         data-options="url:'${ctx}/qc/getTodeyOrderOfIndex.do',fitColumns:true,singleSelect:true">
 		                  <thead>
 			                 <tr>
-				               <th field="pono" width="100" align="center">订单编号</th>			
-				               <th field="name" width="100" align="center">生产组别</th>
-				               <th field="pre_shipment_date" width="100" align="center" formatter="formatPredate">预出货日期</th>
-				               <th field="temp" width="100" align="center" formatter="formatSchedule">进度</th>
-				               <th field="product_name" width="100" align="center">产品类型</th>
-				               <th field="order_number" width="100" align="center">订单数量</th>
-				               <th field="finish_number" width="100" align="center" formatter="formatfin">完成数量</th>
-				               <th field="product_status" width="100" align="center" formatter="formatStatus">生产状态</th>			
+				               <th field="pono" width="10%" align="center">订单编号</th>	
+				               <th field="product_specific" width="5%" align="center">型号</th>	
+				               <th field="model" width="13%" align="center">model</th>			               	
+				               <th field="name"  width="7%" align="center">生产组别</th>
+				               <th field="pre_shipment_date"  width="10%" align="center" formatter="formatPredate">预出货日期</th>
+				               <th field="temp"  width="20%"  formatter="formatSchedule">进度</th>
+				               <th field="product_name"  width="7%" align="center">产品类型</th>
+				               <th field="order_number"  width="7%" align="center">订单数量</th>
+				               <th field="finish_number"  width="10%" align="center" formatter="formatfin">完成数量</th>
+				               <th field="product_status"  width="7%" align="center" formatter="formatStatus">生产状态</th>			
 			                </tr>
 		                 </thead>
 	                     </table></td>
@@ -41,11 +49,11 @@
                   <tr>
                       <td><div id="home-panel-pie" title="产品类型生产概况" class="easyui-panel"   
                                data-options="cls:'c0',href:'indexjsp/todaycapacitypie.jsp'" 
-                               style="width:450px;height:318px;padding:10px;">     
+                               style="padding:10px;">     
                               </div></td>
                       <td><div id="home-panel-line" title="工时与产能走势图" class="easyui-panel"   
                                data-options="cls:'c0',href:'indexjsp/todaycapacityline.jsp'" 
-                               style="width:970px;height:318px;padding:10px;">    
+                               style="padding:10px;">    
                                </div></td>
                   </tr>
              </table>
@@ -153,22 +161,50 @@ function formatPredate(value,row,index){
    }   
 }
 function formatSchedule(value,row,index) {
-    var temp=100*row.finish_number/row.order_number;
-    var schedule=temp.toFixed(2);
-    var color="";  
-    if(temp>=80){
-       color="color:green;";
-    }else{
-       color="color:red;";
-    }
-    return '<span style='+color+'>'+schedule+'%</span>';   
-}
-function formatStatus(value,row,index) {
-   return value;
-}  
-function formatfin(value,row,index){
-   return value+"/<span style='color:black'>"+row.order_number+"<span/>";
-}
+       var temp=100*row.finish_number/row.order_number;
+       var schedule=temp.toFixed(2);  
+       var color=schedule>80?"green":schedule>40?"#FF9933":"#FF0000";  
+       var length=schedule>28?schedule:28;
+	   var s = ' <div style="width:100%;border:0px solid #ccc;">'+
+			   ' <div style="width:' + length+ '%;background:'+color+';color:#FFFFFF">' + schedule + '%' + 
+			   ' </div></div>';
+	   return s;
+
+	}
+	function formatStatus(value, row, index) {
+		return value;
+	}
+	function formatfin(value, row, index) {
+		return value + "/<span style='color:black'>" + row.order_number
+				+ "<span/>";
+	}
+	 $(function() {
+		var width = $(this).width()-170;
+		var height = $(this).height()-108;
+		$("#home-panel-welcome").panel({
+			width : width * 0.3,
+			height : height * 0.48
+		});
+		$("#todayorder").datagrid({
+			width : width * 0.68,
+			height : height * 0.48
+		});
+		$("#home-panel-pie").panel({
+			width : width * 0.3,
+			height : height * 0.48
+		});
+		$("#home-panel-line").panel({
+			width : width * 0.68,
+			height : height * 0.48
+		});
+	});
+function getDateStr(temp){
+   var year=temp.getFullYear();
+   var month=temp.getMonth() < 9 ? "0" + (temp.getMonth()+1) : (temp.getMonth()+1);
+   var day=temp.getDate() < 10 ? "0" + temp.getDate() : temp.getDate();
+   var time=year+"-"+month+"-"+day
+   return time;
+} 
 </script>
   </body>
 </html>

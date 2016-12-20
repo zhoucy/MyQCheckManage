@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.apache.ibatis.annotations.Param;
 
-import com.gangdian.qc.model.Department;
 import com.gangdian.qc.model.ProductMain;
 
 public interface ProductMainDao {
@@ -70,11 +69,19 @@ public interface ProductMainDao {
     Map<Object, Object> selectProductNum(ProductMain main);
     
     /**
-     *                  根据组别id获取当天的生产信息(product_mian)
+     *                  根据组别id获取当天的生产信息(根据刷卡序列号数量)(product_mian)
      * @param groupid
      * @return
      */
     List<Map<String, Object>> getTodayPMByGroupid(@Param("groupid") Integer groupid);
+    
+    /**
+     *                  根据组别id获取当天的生产信息(根据生产计划订单的数量)(product_mian)
+     * @param groupid
+     * @return
+     */
+    List<Map<String, Object>> getTodayPMByGroupidFromPlan(@Param("groupid") Integer groupid,
+    		@Param("productDate") String productDate);
     
     /**
      *                 根据组别id获取当天生产中的product_main id
@@ -82,5 +89,9 @@ public interface ProductMainDao {
      * @return
      */
     List<Map<String, Object>> lockProducingQCPM(@Param("groupid") Integer groupid);
+    
+    
+    List<Map<String, Object>> getPMByGroupidAndProductDate(@Param("groupid") Integer groupid,
+    		@Param("productDate") String productDate);
     
 }

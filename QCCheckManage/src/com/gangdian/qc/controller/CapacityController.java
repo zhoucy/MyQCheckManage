@@ -6,10 +6,14 @@ import java.util.List;
 import java.util.Map;
 
 
+
+
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
 import com.gangdian.qc.service.CapacityService;
 
 
@@ -78,13 +82,19 @@ public class CapacityController {
 			String producttype,Integer group,Integer belong) throws ParseException{
 		return capacityService.getProductTypeHighCharts(date, timetype, producttype, group,belong);
 	}
+	//产能对比highcharts
+	@RequestMapping("getProductPerHourHighCharts.do")
+	@ResponseBody
+	public Map<String, Object> getProductPerHourHighCharts(String date,Integer groupid,Integer n) throws ParseException{
+		return capacityService.getProductPerHourHighCharts(date, groupid,n);
+	}
 	
 	
 	//首页获取当天的正在生产的订单信息
 	@RequestMapping("getTodeyOrderOfIndex.do")
 	@ResponseBody
-	public List<Map<String, Object>> getTodeyOrderOfIndex(){
-		return capacityService.getTodayOrderOfIndex();
+	public List<Map<String, Object>> getTodeyOrderOfIndex(String productDate){
+		return capacityService.getTodayOrderOfIndex(productDate);
 	}
 	//首页获取当天每个小时总产能的信息
 	@RequestMapping("getTodayCapacityOfIndex.do")

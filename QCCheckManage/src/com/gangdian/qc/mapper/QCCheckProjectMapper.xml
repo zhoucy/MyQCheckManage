@@ -104,5 +104,8 @@
   
   </select>
   
+  <select id="getAllProjectIdAndName" resultType="java.util.HashMap">
+      select id,(id+name) name from QCCheckProject
+  </select>
   
 </mapper>

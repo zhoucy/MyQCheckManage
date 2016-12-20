@@ -95,7 +95,7 @@
     <table id="pg" fit="true"></table></div> 
     <div id="dlg2" class="easyui-dialog" style="left:660px;top:5px;width:350px;height:480px;"closed="true">
     <table id="pg2" fit="true"></table></div>  
-    <div id="dlg3" class="easyui-dialog" style="left:0;top:240px;width:640px;height:300px;padding:10px 20px"closed="true" 
+    <div id="dlg3" class="easyui-dialog" style="left:0;top:240px;width:640px;height:300px;"closed="true" 
                    collapsible="true" resizable="true" maximizable="true">
     <table id="pg3" style="width:300px"></table></div>    
 	<script type="text/javascript">
@@ -260,6 +260,7 @@
                $('#pg3').datagrid({  
                  fit:true, 
                  url:'getDefective.do',
+                 
                  queryParams: {
 		                       date: date,
 		                       hour: hour,

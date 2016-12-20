@@ -87,7 +87,7 @@
           <table id="swipedata" class="easyui-datagrid"  rownumbers="true" style="width:auto;height:350px" fitColumns="true" 
                                         pagination="true" 
                                         data-options="url:'${ctx}/qc/getSwipeDataByParams.do?swipedate=today',fitColumns:true,singleSelect:true,loadMsg:0,
-                                        queryParams: {groupid:${sessionScope.groupid} },  
+                                        queryParams: {groupid:'${sessionScope.groupid}' },  
                                         ">
                                         <thead>
                                             <tr>

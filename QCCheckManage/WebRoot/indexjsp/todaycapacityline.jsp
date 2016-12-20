@@ -64,6 +64,6 @@ var chart1=$("#container1").highcharts({
 </script>
   </head>
   <body>
-    <div  id="container1" style="width:950px;height:269px;"></div>
+    <div  id="container1" style="width:100%;height:100%;"></div>
   </body>
 </html>

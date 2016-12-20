@@ -63,10 +63,11 @@ if(id!=""){
 			var td9=$("<td>"+sumRecord[i].nine+"</td>"); 
 			var td10=$("<td>"+sumRecord[i].ten+"</td>");
 			var td11=$("<td>"+sumRecord[i].eleven+"</td>"); 
-			var td12=$("<td>"+sumRecord[i].allNum+"</td>");
+			var td12=$("<td>"+sumRecord[i].h12+"</td>"); 
+			var td13=$("<td>"+sumRecord[i].allNum+"</td>");
 			
 			tr.append(tdname).append(td1).append(td2).append(td3).append(td4).append(td5).
-			append(td6).append(td7).append(td8).append(td9).append(td10).append(td11).append(td12);
+			append(td6).append(td7).append(td8).append(td9).append(td10).append(td11).append(td12).append(td13);
 			tr.appendTo(record);  
 			
 			}
@@ -74,7 +75,7 @@ if(id!=""){
 		var goodRatetr=$("<tr><td>良品率%</td></tr>"); 
 		var arrivedRatetr=$("<tr><td>达成率%</td></tr>"); 
 		//计算良品率 循环遍历 达成率和良品率小于98%的标红
-		for(var i=1,len=12;i<len;i++){ 
+		for(var i=1,len=13;i<len;i++){ 
 			
 		    var bad = record.children().eq(0).children().eq(i);//获取到不良数 
 			var good = record.children().eq(1).children().eq(i);//获取到良品数 

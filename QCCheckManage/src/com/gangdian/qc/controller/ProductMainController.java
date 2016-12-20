@@ -55,11 +55,18 @@ public class ProductMainController {
 		return mainService.getMainPageList(main, rows, page, sort, order);
 	}
 	
-	//根据组别获取当天的订单生产信息
+	//根据组别获取当天的订单生产信息(根据刷卡序列号数量)
 	@RequestMapping("getTodayPMByGroupid.do")
 	@ResponseBody
 	public List<Map<String, Object>> getTodayPMByGroupid(Integer groupid){
 		return mainService.getTodayPMByGroupid(groupid);
+	}
+	
+	// 根据组别获取当天的订单生产信息(根据生成计划订单的完成数量)
+	@RequestMapping("getTodayPMByGroupidFromPlan.do")
+	@ResponseBody
+	public List<Map<String, Object>> getTodayPMByGroupidFromPlan(Integer groupid,String productDate) {
+		return mainService.getTodayPMByGroupidFromPlan(groupid,productDate);
 	}
 	
 	//根据组别获取当天正在生产中的订单的id
@@ -75,6 +82,13 @@ public class ProductMainController {
 		ProductMain main=new ProductMain();
 		main.setGroupid(groupid);
 		return mainService.selectByOtherMax(main);
+	}
+	
+	//根据组别和日期获取pm
+	@RequestMapping("getPMByGroupidAndProductDate.do")
+	@ResponseBody
+	public List<Map<String, Object>> getPMByGroupidAndProductDate(Integer groupid,String productDate){
+		return mainService.getPMByGroupidAndProductDate(groupid, productDate);
 	}
 }
 

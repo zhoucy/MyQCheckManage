@@ -3,6 +3,8 @@ package com.gangdian.qc.service;
 import java.util.List;
 
 
+import java.util.Map;
+
 import com.gangdian.qc.model.QCCheckProject;
 
 public interface QCCheckProjectService {
@@ -21,4 +23,6 @@ public interface QCCheckProjectService {
 	public  List<QCCheckProject>  queryPageProject(String id,String name,int startIndex, int pageSize);
 	public int getProjectCount(QCCheckProject record);
 
+	
+	public List<Map<String, Object>> getAllProjectIdAndName();
 }

@@ -4,10 +4,13 @@ import java.math.BigDecimal;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -158,18 +161,19 @@ public class CapacityServiceImpl implements CapacityService{
 			warninglist.add(warningnum);
 			//x轴刻度	
 			String tmpdate=alldata.get(i).get("tmpdate").toString();
+			int beginIndex=tmpdate.indexOf("-")+1;
 			if(timetype.equals("week")){					
 				Date tmpdate2=MyDateUtil.ZeroFormat(tmpdate);
 				String week=new SimpleDateFormat("EEEE").format(tmpdate2);			
-				xAxis.add(week+"("+tmpdate.substring(6).replace("-", "/")+")"+" ");
+				xAxis.add(week+"("+tmpdate.substring(beginIndex).replace("-", "/")+")"+" ");
 			}else if(timetype.equals("month")){
-				xAxis.add(tmpdate.substring(6).replace("-", "/"));
+				xAxis.add(tmpdate.substring(beginIndex).replace("-", "/"));
 			}else if(timetype.equals("quarter")){
 				xAxis.add(tmpdate+"月");
 			}else if(timetype.equals("year")){
 				xAxis.add(tmpdate+"月");
 			}else{
-				xAxis.add(tmpdate.substring(6).replace("-", "/"));
+				xAxis.add(tmpdate.substring(beginIndex).replace("-", "/"));
 			}			
 		}
 				
@@ -298,18 +302,19 @@ public class CapacityServiceImpl implements CapacityService{
 			othertotal=Integer.parseInt(alldata.get(i).get("other").toString())+othertotal;
 			//x轴刻度
 			String tmpdate=alldata.get(i).get("tmpdate").toString();
+			int beginIndex=tmpdate.indexOf("-")+1;
 			if(timetype.equals("week")){					
 				Date tmpdate2=MyDateUtil.ZeroFormat(tmpdate);
 				String week=new SimpleDateFormat("EEEE").format(tmpdate2);			
-				xAxis.add(week+"("+tmpdate.substring(6).replace("-", "/")+")"+" ");
+				xAxis.add(week+"("+tmpdate.substring(beginIndex).replace("-", "/")+")"+" ");
 			}else if(timetype.equals("month")){
-				xAxis.add(tmpdate.substring(6).replace("-", "/"));
+				xAxis.add(tmpdate.substring(beginIndex).replace("-", "/"));
 			}else if(timetype.equals("quarter")){
 				xAxis.add(tmpdate+"月");
 			}else if(timetype.equals("year")){
 				xAxis.add(tmpdate+"月");
 			}else{
-				xAxis.add(tmpdate.substring(6).replace("-", "/"));
+				xAxis.add(tmpdate.substring(beginIndex).replace("-", "/"));
 			}			
 	  }		
 		//核心数据的封装
@@ -349,6 +354,58 @@ public class CapacityServiceImpl implements CapacityService{
 				map.put("series", series);
 				return map;
 	}
+	
+	//没小时产能统计图highcharts
+	public Map<String, Object> getProductPerHourHighCharts(String date,Integer groupid,Integer n) throws ParseException {
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+		Date day=new Date();
+		if(date!=null&&!date.trim().equals("")){
+			day=MyDateUtil.ZeroFormat(date);
+		}
+		if(n==null||n<0){n=1;}
+		String startday=sdf.format(new Date(day.getTime()-86400000*n));
+		String endday=sdf.format(new Date(day.getTime()+86400000));
+		List<Map<String, Object>> lm=capacityDao.getProductPerHourHighCharts(startday, endday, groupid);
+		Map<String, Object> hc=new HashMap<String, Object>();
+		if(lm!=null&&lm.size()>0){			
+			//x轴
+			//y轴
+			List<String> xAxis=new ArrayList<String>();
+			List<Map<String, Object>> series=new ArrayList<Map<String, Object>>();
+			boolean flag=true;
+			for (Map<String, Object> map : lm) {
+				//Set<Entry<String, Object>> entries=map.entrySet();
+				//按keys排序
+				List<Map.Entry<String, Object>> entries=new ArrayList<Map.Entry<String, Object>>(map.entrySet());
+				Collections.sort(entries, new Comparator<Map.Entry<String, Object>>() {   
+				    public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {      
+				        return (o1.getKey()).toString().compareTo(o2.getKey());
+				    }
+				}); 
+				Map<String, Object> temp=new HashMap<String, Object>();
+				Map<String, Object> dataLabels=new HashMap<String, Object>();
+				dataLabels.put("enabled", true);
+				temp.put("dataLabels", dataLabels);
+				if(flag){temp.put("color", "red");}
+				List<Object> data=new ArrayList<Object>();
+				for (Entry<String, Object> entry : entries) {										
+					if(!entry.getKey().equals("Date")&&!entry.getKey().equals("total")){
+				    	if(flag){
+							xAxis.add(entry.getKey());
+						}
+						data.add(entry.getValue());
+					}
+				}				
+				temp.put("data", data);
+				temp.put("name", map.get("Date")+"(合计:"+map.get("total")+")");
+				series.add(temp);
+				flag=false;
+			}
+			hc.put("xAxis", xAxis);
+			hc.put("series", series);
+		}
+		return hc;	
+	}
 
 	
 	//产能详细信息(按小时)
@@ -379,8 +436,8 @@ public class CapacityServiceImpl implements CapacityService{
 	}
 
 	//首页获取今天的订单信息
-	public List<Map<String, Object>> getTodayOrderOfIndex() {
-		return capacityDao.getTodayOrderOfIndex();
+	public List<Map<String, Object>> getTodayOrderOfIndex(String productDate) {
+		return capacityDao.getTodayOrderOfIndex(productDate);
 	}
 
 	//某日和今天的比较线图
@@ -442,6 +499,8 @@ public class CapacityServiceImpl implements CapacityService{
 	public List<Map<String, Object>> getPonoAndUnion() {
 		return capacityDao.getPonoAndUnion();
 	}
+
+
 
 			
 }

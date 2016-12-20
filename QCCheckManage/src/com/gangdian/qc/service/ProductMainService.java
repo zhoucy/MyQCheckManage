@@ -5,6 +5,8 @@ import java.util.Map;
 
 
 
+
+
 import com.gangdian.qc.model.ProductMain;
 
 public interface ProductMainService {
@@ -71,5 +73,9 @@ public interface ProductMainService {
 
 		public List<Map<String, Object>> getTodayPMByGroupid(Integer groupid);
 		
+		public List<Map<String, Object>> getTodayPMByGroupidFromPlan(Integer groupid,String productDate);
+		
 		public Map<String, Object> lockProducingQCPM(Integer groupid);
+		
+		public List<Map<String, Object>> getPMByGroupidAndProductDate(Integer groupid,String productDate);
 }

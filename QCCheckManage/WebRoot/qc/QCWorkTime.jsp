@@ -33,6 +33,7 @@
 				<th colspan="2">9</th>
 				<th colspan="2">10</th>
 				<th colspan="2">11</th>
+				<th colspan="2">12</th>
 			</tr>
 			<tr>
 			    <th field="S1" width="60" align="center" formatter="formattertime">起</th>
@@ -57,6 +58,8 @@
 				<th field="E10" width="60" align="center" formatter="formattertime">止</th>
 				<th field="S11" width="60" align="center" formatter="formattertime">起</th>
 				<th field="E11" width="60" align="center" formatter="formattertime">止</th>
+				<th field="S12" width="60" align="center" formatter="formattertime">起</th>
+				<th field="E12" width="60" align="center" formatter="formattertime">止</th>
 			</tr>
 		</thead>	
 	    </table>
@@ -78,7 +81,7 @@
 		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-reload" plain="true" onclick="reload()">刷新</a>
 		<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-mycopy" plain="true" onclick="copyQCWT()">复制</a>
 	</div>
-	<div id="dlg" class="easyui-dialog" style="width:370px;height:510px;padding:10px 20px"
+	<div id="dlg" class="easyui-dialog" style="width:390px;height:540px;padding:10px 20px"
 			closed="true" buttons="#dlg-buttons">
 		<div class="ftitle">工作时间</div>
 		<form id="fm" method="post" novalidate>
@@ -157,6 +160,11 @@
 				<label>11小时:</label>
 				<input name="S11" class="easyui-numberbox" style="width:80px">
 				<input name="E11" class="easyui-numberbox" style="width:80px">
+			</div>
+			<div class="fitem">
+				<label>12小时:</label>
+				<input name="S12" class="easyui-numberbox" style="width:80px">
+				<input name="E12" class="easyui-numberbox" style="width:80px">
 			</div>
 		</form>
 	</div>

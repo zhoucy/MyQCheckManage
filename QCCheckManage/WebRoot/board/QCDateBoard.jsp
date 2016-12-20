@@ -310,7 +310,7 @@ else return false;
 							<th width="10%" rowspan="2" >时间段</th>
 						    <th width="8%" colspan="4">上午时段</th>
 						    <th width="8%" colspan="4">下午时段</th>
-						    <th width="8%" colspan="3">加班时段</th>
+						    <th width="8%" colspan="4">加班时段</th>
 						    <th width="8%" rowspan="2">合计</th>
 						</tr>
 						<tr height="40px">
@@ -326,7 +326,7 @@ else return false;
 						    <th width="7%">9</th>
 						    <th width="7%">10</th>
 						    <th width="7%">11</th>
-						 
+						 	 <th width="7%">12</th>
 						</tr>
 						<tr height="40px" id="standard_product">
 							
@@ -549,6 +549,7 @@ else return false;
 							<option value="9">9</option>
 							<option value="10">10</option>
 							<option value="11">11</option>
+							<option value="12">12</option>
 		</select> <font color="red" id="errRed"></font> 
      	 <div class="blank20"></div>
        <label class="label-1 left width85">员工人数：</label> 

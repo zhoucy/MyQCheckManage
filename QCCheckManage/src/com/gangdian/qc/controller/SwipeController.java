@@ -5,6 +5,7 @@ import java.util.Map;
 
 
 
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import com.gangdian.qc.service.SwipeServer;
 import com.springmvc.common.PrintLable;
 import com.springmvc.sys.ZUtil;
 import com.springmvc.util.Const;
-import com.springmvc.util.PrintQRCODE;
+import com.springmvc.util.print.PrintUtil;
 
 
 @Controller
@@ -31,7 +32,6 @@ public class SwipeController {
 	@Autowired
 	private QCCheckProjectService checkProjectService;
 	private  Logger log=Logger.getLogger(this.getClass());
-	private  PrintQRCODE printer=new PrintQRCODE();
 	//获取id卡的信息
 	@RequestMapping("getCardInfo.do")
 	@ResponseBody
@@ -86,7 +86,7 @@ public class SwipeController {
 			return "-1";
 		}
 		try {
-			printer.print(cserialnum);
+			PrintUtil.UtilPrint(cserialnum, printname);
 			return "0";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -102,10 +102,8 @@ public class SwipeController {
 		if(cserialnum==null||cserialnum.trim().equals("")){
 			cserialnum="打印测试";
 		}
-		System.out.println(cserialnum);
-		System.out.println(printname);
 		try {
-			printer.print(cserialnum);
+			PrintUtil.UtilPrint(cserialnum, printname);
 			result="true";
 		} catch (Exception e) {
 			e.printStackTrace();
